@@ -1,0 +1,399 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Süt Teslimatları {% endblock %}
+
+{% block stylesheets %}
+<!-- Stepper CSS -->
+<style>
+.bs-stepper {
+    border: none;
+    margin-bottom: 20px;
+}
+.bs-stepper-header {
+    padding: 20px;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(50,50,93,.1);
+}
+.step-trigger {
+    padding: 10px 15px;
+    display: inline-flex;
+    align-items: center;
+    color: #525f7f;
+    text-decoration: none;
+}
+.bs-stepper-circle {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    margin-right: 10px;
+}
+.active .bs-stepper-circle {
+    background-color: #5e72e4;
+    color: #fff;
+}
+.bs-stepper-label {
+    font-weight: 600;
+    margin: 0;
+}
+.line {
+    width: 50px;
+    height: 2px;
+    background-color: #e9ecef;
+    margin: 0 10px;
+}
+.step-content {
+    display: none;
+    padding: 20px;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(50,50,93,.1);
+}
+.step-content.active {
+    display: block;
+}
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="min-height-300 bg-primary position-absolute w-100"></div>
+
+
+
+<main class="main-content position-relative border-radius-lg">
+
+
+    <div class="container-fluid py-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card mb-4">
+                    <div class="card-header pb-0">
+                        <h6>Süt Teslimatı</h6>
+                    </div>
+                    <div class="card-body">
+                        <!-- Stepper -->
+                        <div class="bs-stepper">
+                            <div class="bs-stepper-header">
+                                <div class="step active" data-step="1">
+                                    <button class="step-trigger">
+                                        <span class="bs-stepper-circle">1</span>
+                                        <span class="bs-stepper-label">Temel Bilgiler</span>
+                                    </button>
+                                </div>
+                                <div class="line"></div>
+                                <div class="step" data-step="2">
+                                    <button class="step-trigger">
+                                        <span class="bs-stepper-circle">2</span>
+                                        <span class="bs-stepper-label">Miktar Bilgileri</span>
+                                    </button>
+                                </div>
+                                <div class="line"></div>
+                                <div class="step" data-step="3">
+                                    <button class="step-trigger">
+                                        <span class="bs-stepper-circle">3</span>
+                                        <span class="bs-stepper-label">Kalite Parametreleri</span>
+                                    </button>
+                                </div>
+                                <div class="line"></div>
+                                <div class="step" data-step="4">
+                                    <button class="step-trigger">
+                                        <span class="bs-stepper-circle">4</span>
+                                        <span class="bs-stepper-label">Onay</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Step İçerikleri -->
+                            <form id="deliveryForm" method="POST">
+                                <!-- Adım 1: Temel Bilgiler -->
+                                <div class="step-content active" data-step="1">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Teslimat Tarihi</label>
+                                                <input type="date" class="form-control" name="delivery_date" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Süt Fabrikası</label>
+                                                <select class="form-control" name="factory_name" required>
+                                                    <option value="">Seçiniz...</option>
+                                                    {% for factory in factories %}
+                                                    <option value="{{ factory.name }}">{{ factory.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Araç Plakası</label>
+                                                <select class="form-control" name="vehicle_plate" required>
+                                                    <option value="">Seçiniz...</option>
+                                                    {% for vehicle in vehicles %}
+                                                    <option value="{{ vehicle.plate }}">{{ vehicle.plate }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-4">
+                                        <div class="col-12 text-end">
+                                            <button type="button" class="btn btn-primary" onclick="nextStep(1)">İleri</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Adım 2: Miktar Bilgileri -->
+                                <div class="step-content" data-step="2">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Makbuz No</label>
+                                                <input type="text" class="form-control" name="receipt_number" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Süt Miktarı (Lt)</label>
+                                                <input type="number" step="0.01" class="form-control" name="quantity" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-4">
+                                        <div class="col-12 text-end">
+                                            <button type="button" class="btn btn-secondary" onclick="prevStep(2)">Geri</button>
+                                            <button type="button" class="btn btn-primary" onclick="nextStep(2)">İleri</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Adım 3: Kalite Parametreleri -->
+                                <div class="step-content" data-step="3">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Yağ Oranı (%)</label>
+                                                <input type="number" step="0.01" class="form-control" name="fat_ratio" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-control-label">pH Değeri</label>
+                                                <input type="number" step="0.01" class="form-control" name="ph_value" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-4">
+                                        <div class="col-12 text-end">
+                                            <button type="button" class="btn btn-secondary" onclick="prevStep(3)">Geri</button>
+                                            <button type="button" class="btn btn-primary" onclick="nextStep(3)">İleri</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Adım 4: Onay -->
+                                <div class="step-content" data-step="4">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h6 class="mb-4">Teslimat Bilgileri Özeti</h6>
+                                            <div id="summaryContent">
+                                                <!-- JavaScript ile doldurulacak -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-4">
+                                        <div class="col-12 text-end">
+                                            <button type="button" class="btn btn-secondary" onclick="prevStep(4)">Geri</button>
+                                            <button type="button" class="btn btn-danger" onclick="cancelDelivery()">İptal</button>
+                                            <button type="submit" class="btn btn-success">Kaydet</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Teslimat Listesi -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card mb-4">
+                    <div class="card-header pb-0">
+                        <h6>Son Teslimatlar</h6>
+                    </div>
+                    <div class="card-body px-0 pt-0 pb-2">
+                        <div class="table-responsive p-0">
+                            <table class="table align-items-center mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Tarih</th>
+                                        <th>Fabrika</th>
+                                        <th>Araç</th>
+                                        <th>Miktar</th>
+                                        <th>Yağ Oranı</th>
+                                        <th>pH</th>
+                                        <th>Durum</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for delivery in deliveries %}
+                                    <tr>
+                                        <td>{{ delivery.delivery_date.strftime('%d.%m.%Y') }}</td>
+                                        <td>{{ delivery.factory_name }}</td>
+                                        <td>{{ delivery.vehicle_plate }}</td>
+                                        <td>{{ "{:,.2f}".format(delivery.quantity) }} Lt</td>
+                                        <td>{{ "{:.2f}".format(delivery.fat_ratio) }}%</td>
+                                        <td>{{ "{:.2f}".format(delivery.ph_value) }}</td>
+                                        <td>
+                                            <span class="badge badge-sm bg-gradient-success">Tamamlandı</span>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include "includes/footer.html" %}
+
+</main>
+
+{% endblock content %}
+
+{% block javascripts %}
+<script>
+// Form verilerini kontrol et
+function validateStep(step) {
+    const stepContent = document.querySelector(`.step-content[data-step="${step}"]`);
+    const inputs = stepContent.querySelectorAll('input, select');
+    let isValid = true;
+
+    inputs.forEach(input => {
+        if (input.hasAttribute('required') && !input.value) {
+            isValid = false;
+            input.classList.add('is-invalid');
+        } else {
+            input.classList.remove('is-invalid');
+        }
+    });
+
+    return isValid;
+}
+
+// Sonraki adıma geç
+function nextStep(currentStep) {
+    if (!validateStep(currentStep)) {
+        alert('Lütfen tüm zorunlu alanları doldurun.');
+        return;
+    }
+
+    // Mevcut adımı gizle
+    document.querySelector(`.step-content[data-step="${currentStep}"]`).classList.remove('active');
+    document.querySelector(`.step[data-step="${currentStep}"]`).classList.remove('active');
+
+    // Sonraki adımı göster
+    const nextStep = currentStep + 1;
+    document.querySelector(`.step-content[data-step="${nextStep}"]`).classList.add('active');
+    document.querySelector(`.step[data-step="${nextStep}"]`).classList.add('active');
+
+    // Son adımda özeti güncelle
+    if (nextStep === 4) {
+        updateSummary();
+    }
+}
+
+// Önceki adıma dön
+function prevStep(currentStep) {
+    // Mevcut adımı gizle
+    document.querySelector(`.step-content[data-step="${currentStep}"]`).classList.remove('active');
+    document.querySelector(`.step[data-step="${currentStep}"]`).classList.remove('active');
+
+    // Önceki adımı göster
+    const prevStep = currentStep - 1;
+    document.querySelector(`.step-content[data-step="${prevStep}"]`).classList.add('active');
+    document.querySelector(`.step[data-step="${prevStep}"]`).classList.add('active');
+}
+
+// Özet bilgilerini güncelle
+function updateSummary() {
+    const form = document.getElementById('deliveryForm');
+    const formData = new FormData(form);
+    
+    let summaryHtml = `
+        <div class="table-responsive">
+            <table class="table">
+                <tr>
+                    <th>Teslimat Tarihi:</th>
+                    <td>${formData.get('delivery_date')}</td>
+                    <th>Fabrika:</th>
+                    <td>${formData.get('factory_name')}</td>
+                </tr>
+                <tr>
+                    <th>Araç Plakası:</th>
+                    <td>${formData.get('vehicle_plate')}</td>
+                    <th>Makbuz No:</th>
+                    <td>${formData.get('receipt_number')}</td>
+                </tr>
+                <tr>
+                    <th>Süt Miktarı:</th>
+                    <td>${formData.get('quantity')} Lt</td>
+                    <th>Yağ Oranı:</th>
+                    <td>${formData.get('fat_ratio')}%</td>
+                </tr>
+                <tr>
+                    <th>pH Değeri:</th>
+                    <td>${formData.get('ph_value')}</td>
+                    <th></th>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+    `;
+
+    document.getElementById('summaryContent').innerHTML = summaryHtml;
+}
+
+// Teslimatı iptal et
+function cancelDelivery() {
+    if (confirm('Teslimat kaydını iptal etmek istediğinize emin misiniz?')) {
+        window.location.href = '/milk-deliveries';
+    }
+}
+
+// Form gönderimi
+document.getElementById('deliveryForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    fetch('/api/milk-factory-delivery', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Teslimat başarıyla kaydedildi.');
+            window.location.reload();
+        } else {
+            alert('Hata: ' + data.message);
+        }
+    })
+    .catch(error => {
+        alert('Bir hata oluştu: ' + error);
+    });
+});
+</script>
+{% endblock javascripts %}

@@ -1,0 +1,122 @@
+    <!-- Fixed Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+      <div class="container-fluid px-4">
+        <!-- Logo -->
+        <a class="navbar-brand d-flex align-items-center" href="/">
+          <i class="fas fa-cow me-2"></i>
+          <span class="font-weight-bold">ÖZMERT SÜT</span>
+        </a>
+
+        <!-- Mobil menü butonu -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+          <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- Navbar içeriği -->
+        <div class="collapse navbar-collapse" id="navbarContent">
+          <ul class="navbar-nav me-auto">
+            <!-- Dashboard -->
+            <li class="nav-item">
+              <a class="nav-link {% if segment == 'dashboard' %} active {% endif %}" href="/dashboard">
+                <i class="fas fa-chart-line"></i>
+                <i class="ni ni-chart-bar-32 me-2"></i>Dashboard
+              </a>
+            </li>
+
+            <!-- Süt İşlemleri Dropdown -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                <i class="ni ni-delivery-fast me-2"></i>Süt İşlemleri
+              </a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item {% if segment == 'milk-collection' %} active {% endif %}" href="/milk-collection">Süt Toplama</a>
+                <a class="dropdown-item {% if segment == 'milk-deliveries' %} active {% endif %}" href="/milk-deliveries">Süt Teslimat</a>
+              </div>
+            </li>
+
+            <!-- Yem İşlemleri Dropdown -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                <i class="ni ni-shop me-2"></i>Yem İşlemleri
+              </a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item {% if segment == 'feed-supply' %} active {% endif %}" href="/feed-supply">Yem Tedarik</a>
+                <a class="dropdown-item {% if segment == 'feed-deliveries' %} active {% endif %}" href="/feed-deliveries">Yem Teslimat</a>
+              </div>
+            </li>
+
+            <!-- Muhasebe İşlemleri Dropdown -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                <i class="ni ni-calendar-grid-58 me-2"></i>Muhasebe
+              </a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item {% if segment == 'period-operations' %} active {% endif %}" href="/period-operations">Dönem İşlemleri</a>
+                <a class="dropdown-item {% if segment == 'pending-records' %} active {% endif %}" href="/pending-records">Bekleyen Kayıtlar</a>
+                <a class="dropdown-item {% if segment == 'account-control' %} active {% endif %}" href="/account-control">Hesap Kontrol</a>
+              </div>
+            </li>
+
+            <!-- Cari Hesaplar Dropdown -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                <i class="ni ni-credit-card me-2"></i>Cari Hesaplar
+              </a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item {% if segment == 'companies' %} active {% endif %}" href="/companies">Firmalar</a>
+                <a class="dropdown-item {% if segment == 'individuals' %} active {% endif %}" href="/individuals">Şahıslar</a>
+                <a class="dropdown-item {% if segment == 'current-accounts' %} active {% endif %}" href="/current-accounts">Hesap Hareketleri</a>
+              </div>
+            </li>
+
+            <!-- Tanımlar Dropdown -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                <i class="ni ni-settings me-2"></i>Tanımlar
+              </a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item {% if segment == 'factories' %} active {% endif %}" href="/settings#factories">Süt Fabrikaları</a>
+                <a class="dropdown-item {% if segment == 'feed-suppliers' %} active {% endif %}" href="/settings#feed-suppliers">Yem Tedarikçileri</a>
+                <a class="dropdown-item {% if segment == 'vehicles' %} active {% endif %}" href="/settings#vehicles">Araç ve Şoförler</a>
+                <a class="dropdown-item {% if segment == 'milk-suppliers' %} active {% endif %}" href="/settings#milk-suppliers">Müstahsiller</a>
+                <a class="dropdown-item {% if segment == 'feed-types' %} active {% endif %}" href="/settings#feed-types">Yem Çeşitleri</a>
+                {% if current_user.is_superadmin %}
+                <a class="dropdown-item {% if segment == 'users' %} active {% endif %}" href="/settings#users">Kullanıcılar</a>
+                {% endif %}
+              </div>
+            </li>
+
+            <!-- Raporlar Dropdown -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                <i class="ni ni-chart-bar-32 me-2"></i>Raporlar
+              </a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item {% if segment == 'milk-reports' %} active {% endif %}" href="/milk-reports">Süt Raporları</a>
+                <a class="dropdown-item {% if segment == 'feed-reports' %} active {% endif %}" href="/feed-reports">Yem Raporları</a>
+                <a class="dropdown-item {% if segment == 'expense-reports' %} active {% endif %}" href="/expense-reports">Gider Raporları</a>
+              </div>
+            </li>
+          </ul>
+
+          <!-- Sağ taraf -->
+          <ul class="navbar-nav">
+            <!-- Ayarlar Dropdown -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                <i class="ni ni-settings-gear-65 me-2"></i>Ayarlar
+              </a>
+              <div class="dropdown-menu dropdown-menu-end">
+                <a class="dropdown-item {% if segment == 'settings' %} active {% endif %}" href="/settings">Sistem Ayarları</a>
+                <a class="dropdown-item {% if segment == 'users' %} active {% endif %}" href="/users">Kullanıcılar</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item text-danger" href="/logout">
+                  <i class="ni ni-button-power me-2"></i>Çıkış Yap
+                </a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    

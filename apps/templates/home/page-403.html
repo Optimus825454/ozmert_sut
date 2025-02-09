@@ -1,0 +1,32 @@
+{% extends 'layouts/base-fullscreen.html' %}
+
+{% block title %} Error 403 {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 text-center">
+            <div class="card cyber-card">
+                <div class="card-body" style="background: linear-gradient(145deg, rgba(28, 45, 86, 0.95), rgba(41, 66, 122, 0.85)); border-radius: 15px; border: 1px solid rgba(8, 136, 255, 0.3);">
+                    <h1 class="text-white display-1">Error 403</h1>
+                    <h3 class="text-white mb-4">Bir şeyler yanlış gitti.</h3>
+                    <p class="text-white-50 mb-4">Erişim engellendi.</p>
+                    <p class="text-white-50 mb-4">Sorun devam ederse, lütfen desteğe başvurun.</p>
+                    <a href="/" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-home me-2"></i>
+                        ANASAYFA
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}{% endblock javascripts %}

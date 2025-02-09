@@ -1,0 +1,1830 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Tanımlamalar {% endblock title %}
+
+{% block stylesheets %}
+<style>
+body {
+    background: linear-gradient(145deg, #1a2035 0%, #1e2842 100%);
+    min-height: 100vh;
+}
+
+.cyber-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.cyber-card {
+    background: linear-gradient(145deg, rgba(28, 45, 86, 0.95), rgba(41, 66, 122, 0.85));
+    border: 1px solid rgba(8, 136, 255, 0.3);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0 30px rgba(8, 136, 255, 0.2);
+}
+
+.cyber-title {
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(8, 136, 255, 0.5);
+}
+
+.cyber-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid rgba(8, 136, 255, 0.3);
+    padding-bottom: 1rem;
+    overflow-x: auto;
+}
+
+.cyber-tab {
+    background: none;
+    border: 1px solid rgba(8, 136, 255, 0.8);
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.8);
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.cyber-tab:hover {
+    background: rgba(8, 136, 255, 0.1);
+    border-color: rgba(8, 136, 255, 0.5);
+    color: #fff;
+}
+
+.cyber-tab.active {
+    background: linear-gradient(145deg, #1e3c72, #2a5298);
+    border-color: rgba(8, 136, 255, 0.5);
+    color: #fff;
+    box-shadow: 0 0 20px rgba(8, 136, 255, 0.3);
+}
+
+.cyber-table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #fff;
+}
+
+.cyber-table th {
+    background: rgba(8, 136, 255, 0.1);
+    padding: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid rgba(8, 136, 255, 0.3);
+}
+
+.cyber-table td {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(8, 136, 255, 0.2);
+}
+
+.cyber-table tbody tr {
+    transition: all 0.3s ease;
+}
+
+.cyber-table tbody tr:hover {
+    background: rgba(8, 136, 255, 0.1);
+}
+
+.cyber-btn {
+    background: linear-gradient(145deg, #1e3c72, #2a5298);
+    border: 1px solid rgba(8, 136, 255, 0.3);
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin: 0 0.25rem;
+}
+
+.cyber-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(8, 136, 255, 0.4);
+    background: linear-gradient(145deg, #2a5298, #1e3c72);
+}
+
+.cyber-btn-edit {
+    background: linear-gradient(145deg, #2a5298, #1e3c72);
+}
+
+.cyber-btn-delete {
+    background: linear-gradient(145deg, #721e1e, #982a2a);
+}
+
+.cyber-action-button {
+    background: none;
+    border: 1px solid rgba(8, 136, 255, 0.3);
+    border-radius: 4px;
+    color: #fff;
+    padding: 0.25rem 0.75rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    margin-left: 0.5rem;
+}
+
+.cyber-action-button:hover {
+    background: rgba(8, 136, 255, 0.1);
+    border-color: rgba(8, 136, 255, 0.5);
+}
+
+.cyber-action-button.edit {
+    border-color: rgba(255, 193, 7, 0.3);
+    color: #ffc107;
+}
+
+.cyber-action-button.edit:hover {
+    background: rgba(255, 193, 7, 0.1);
+    border-color: rgba(255, 193, 7, 0.5);
+}
+
+.cyber-action-button.delete {
+    border-color: rgba(220, 53, 69, 0.3);
+    color: #dc3545;
+}
+
+.cyber-action-button.delete:hover {
+    background: rgba(220, 53, 69, 0.1);
+    border-color: rgba(220, 53, 69, 0.5);
+}
+
+.cyber-status {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+}
+
+.cyber-status.active {
+    background: #28a745;
+    box-shadow: 0 0 10px rgba(40, 167, 69, 0.5);
+}
+
+.cyber-status.inactive {
+    background: #dc3545;
+    box-shadow: 0 0 10px rgba(220, 53, 69, 0.5);
+}
+
+.cyber-modal {
+    background: linear-gradient(145deg, rgba(28, 45, 86, 0.95), rgba(41, 66, 122, 0.85));
+    border: 1px solid rgba(8, 136, 255, 0.3);
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 0 30px rgba(8, 136, 255, 0.2);
+}
+
+.cyber-modal .modal-header {
+    border-bottom: 1px solid rgba(8, 136, 255, 0.3);
+    padding: 1rem 2rem;
+}
+
+.cyber-modal .modal-title {
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.cyber-modal .modal-body {
+    padding: 2rem;
+}
+
+.cyber-modal .modal-footer {
+    border-top: 1px solid rgba(8, 136, 255, 0.3);
+    padding: 1rem 2rem;
+}
+
+.cyber-form-group {
+    margin-bottom: 1.5rem;
+}
+
+.cyber-label {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+}
+
+.cyber-input {
+    background: rgba(20, 30, 60, 0.7);
+    border: 1px solid rgba(8, 136, 255, 0.3);
+    border-radius: 8px;
+    color: #fff;
+    padding: 0.75rem 1rem;
+    width: 100%;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+}
+
+.cyber-input:focus {
+    outline: none;
+    border-color: rgba(8, 136, 255, 0.6);
+    box-shadow: 0 0 15px rgba(8, 136, 255, 0.3);
+}
+
+.cyber-select {
+    background: rgba(20, 30, 60, 0.7);
+    border: 1px solid rgba(8, 136, 255, 0.3);
+    border-radius: 8px;
+    color: #fff;
+    padding: 0.75rem 1rem;
+    width: 100%;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+}
+
+.cyber-select:focus {
+    outline: none;
+    border-color: rgba(8, 136, 255, 0.6);
+    box-shadow: 0 0 15px rgba(8, 136, 255, 0.3);
+}
+
+.tab-content {
+    position: relative;
+}
+
+.tab-pane {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.tab-pane.show {
+    display: block;
+}
+
+.tab-pane.active {
+    opacity: 1;
+}
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="cyber-container py-4">
+    <div class="cyber-card">
+        <h2 class="cyber-title">Tanımlamalar</h2>
+        
+        <div class="cyber-tabs">
+            <button class="cyber-tab active" onclick="showTab('factories')">Süt Fabrikaları</button>
+            <button class="cyber-tab" onclick="showTab('feed-suppliers')">Yem Tedarikçileri</button>
+            <button class="cyber-tab" onclick="showTab('vehicles')">Araç ve Şoförler</button>
+            <button class="cyber-tab" onclick="showTab('milk-suppliers')">Müstahsiller</button>
+            <button class="cyber-tab" onclick="showTab('feed-types')">Yem Çeşitleri</button>
+            <button class="cyber-tab" onclick="showTab('users')">Kullanıcılar</button>
+        </div>
+        
+        <!-- Tab içerikleri -->
+        <div class="tab-content">
+            <div id="factories" class="tab-pane show active">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="cyber-title mb-0">Süt Fabrikaları</h3>
+                    <button class="cyber-btn" onclick="openModal('factory')">
+                        Yeni Fabrika
+                    </button>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="cyber-table">
+                        <thead>
+                            <tr>
+                                <th>Durum</th>
+                                <th>Fabrika Adı</th>
+                                <th>Adres</th>
+                                <th>Telefon</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for factory in factories %}
+                            <tr>
+                                <td>
+                                    <span class="cyber-status {% if factory.is_active %}active{% else %}inactive{% endif %}"></span>
+                                    {{ "Aktif" if factory.is_active else "Pasif" }}
+                                </td>
+                                <td>{{ factory.name }}</td>
+                                <td>{{ factory.address }}</td>
+                                <td>{{ factory.phone }}</td>
+                                <td>
+                                    {% if current_user.is_superadmin %}
+                                    <button class="cyber-action-button edit" onclick="editFactory({{ factory.id }})">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="cyber-action-button delete" onclick="deleteFactory({{ factory.id }})">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div id="feed-types" class="tab-pane">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="cyber-title mb-0">Yem Çeşitleri</h3>
+                    <button class="cyber-btn" onclick="openModal('feedType')">
+                        Yeni Yem Çeşidi
+                    </button>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="cyber-table">
+                        <thead>
+                            <tr>
+                                <th>Durum</th>
+                                <th>Yem Adı</th>
+                                <th>Açıklama</th>
+                                <th>Birim</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for feed_type in feed_types %}
+                            <tr>
+                                <td>
+                                    <span class="cyber-status {% if feed_type.is_active %}active{% else %}inactive{% endif %}"></span>
+                                    {{ "Aktif" if feed_type.is_active else "Pasif" }}
+                                </td>
+                                <td>{{ feed_type.name }}</td>
+                                <td>{{ feed_type.description }}</td>
+                                <td>{{ feed_type.unit }}</td>
+                                <td>
+                                    {% if current_user.is_superadmin %}
+                                    <button class="cyber-action-button edit" onclick="editFeedType({{ feed_type.id }})">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="cyber-action-button delete" onclick="deleteFeedType({{ feed_type.id }})">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div id="vehicles" class="tab-pane">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="cyber-title mb-0">Araçlar</h3>
+                    <button class="cyber-btn" onclick="openModal('vehicle')">
+                        Yeni Araç
+                    </button>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="cyber-table">
+                        <thead>
+                            <tr>
+                                <th>Durum</th>
+                                <th>Plaka</th>
+                                <th>Sürücü</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for vehicle in vehicles %}
+                            <tr>
+                                <td>
+                                    <span class="cyber-status {% if vehicle.is_active %}active{% else %}inactive{% endif %}"></span>
+                                    {{ "Aktif" if vehicle.is_active else "Pasif" }}
+                                </td>
+                                <td>{{ vehicle.plate }}</td>
+                                <td>{{ vehicle.driver_name }}</td>
+                                <td>
+                                    {% if current_user.is_superadmin %}
+                                    <button class="cyber-action-button edit" onclick="editVehicle({{ vehicle.id }})">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="cyber-action-button delete" onclick="deleteVehicle({{ vehicle.id }})">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div id="milk-suppliers" class="tab-pane">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="cyber-title mb-0">Müstahsiller</h3>
+                    <button class="cyber-btn" onclick="openModal('milkSupplier')">
+                        Yeni Müstahsıl
+                    </button>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="cyber-table">
+                        <thead>
+                            <tr>
+                                <th>Durum</th>
+                                <th>Müstahsıl Adı</th>
+                                <th>İlçe</th>
+                                <th>Köy</th>
+                                <th>Telefon</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for supplier in milk_suppliers %}
+                            <tr>
+                                <td>
+                                    <span class="cyber-status {% if supplier.is_active %}active{% else %}inactive{% endif %}"></span>
+                                    {{ "Aktif" if supplier.is_active else "Pasif" }}
+                                </td>
+                                <td>{{ supplier.name }}</td>
+                                <td>{{ supplier.district.name if supplier.district else '' }}</td>
+                                <td>{{ supplier.village.name if supplier.village else '' }}</td>
+                                <td>{{ supplier.phone }}</td>
+                                <td>
+                                    {% if current_user.is_superadmin %}
+                                    <button class="cyber-action-button edit" onclick="editMilkSupplier({{ supplier.id }})">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="cyber-action-button delete" onclick="deleteMilkSupplier({{ supplier.id }})">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div id="feed-suppliers" class="tab-pane">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="cyber-title mb-0">Yem Tedarikçileri</h3>
+                    <button class="cyber-btn" onclick="openModal('feedSupplier')">
+                        Yeni Yem Tedarikçisi
+                    </button>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="cyber-table">
+                        <thead>
+                            <tr>
+                                <th>Durum</th>
+                                <th>Tedarikçi Adı</th>
+                                <th>Adres</th>
+                                <th>Telefon</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for supplier in feed_suppliers %}
+                            <tr>
+                                <td>
+                                    <span class="cyber-status {% if supplier.is_active %}active{% else %}inactive{% endif %}"></span>
+                                    {{ "Aktif" if supplier.is_active else "Pasif" }}
+                                </td>
+                                <td>{{ supplier.name }}</td>
+                                <td>{{ supplier.address }}</td>
+                                <td>{{ supplier.phone }}</td>
+                                <td>
+                                    {% if current_user.is_superadmin %}
+                                    <button class="cyber-action-button edit" onclick="editFeedSupplier({{ supplier.id }})">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="cyber-action-button delete" onclick="deleteFeedSupplier({{ supplier.id }})">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div id="users" class="tab-pane">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="cyber-title mb-0">Kullanıcılar</h3>
+                    <button class="cyber-btn" onclick="openModal('user')">
+                        Yeni Kullanıcı  
+                    </button>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="cyber-table">
+                        <thead> 
+                            <tr>
+                                <th>Kullanıcı Adı</th>
+                                <th>Email</th>
+                                <th>Rol</th>
+                                <th>İşlemler</th>
+                            </tr>   
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td>{{ user.username }}</td>
+                                <td>{{ user.email }}</td>   
+                                <td>{{ user.role }}</td>
+                                <td>
+                                    {% if current_user.is_superadmin %}
+                                    <button class="cyber-action-button edit" onclick="editUser({{ user.id }})">
+                                        <i class="fas fa-edit"></i>
+                                    </button>   
+                                    <button class="cyber-action-button delete" onclick="deleteUser({{ user.id }})">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}    
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rapor Şablonları -->
+        <div id="report-templates" class="tab-content" style="display: none;">  
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="cyber-title mb-0">Rapor Şablonları</h3>
+                <button class="cyber-btn" onclick="openModal('reportTemplate')">
+                    Yeni Rapor Şablonu
+                </button>
+            </div>  
+            <div class="table-responsive">
+                <table class="cyber-table">
+                    <thead>
+                        <tr>
+                            <th>Rapor Adı</th>
+                            <th>Açıklama</th>   
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for report_template in report_templates %}
+                        <tr>    
+                            <td>{{ report_template.name }}</td>
+                            <td>{{ report_template.description }}</td>
+                            <td>
+                                {% if current_user.is_superadmin %}
+                                <button class="cyber-action-button edit" onclick="editReportTemplate({{ report_template.id }})">
+                                    <i class="fas fa-edit"></i>
+                                </button>   
+                                <button class="cyber-action-button delete" onclick="deleteReportTemplate({{ report_template.id }})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+   
+    </div>
+</div>
+
+<!-- Fabrika Modal -->
+<div class="modal fade" id="factoryModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content cyber-modal">
+            <div class="modal-header">
+                <h5 class="modal-title text-white" id="factoryModalTitle">Yeni Fabrika</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="factoryForm">
+                    <input type="hidden" name="id" id="factoryId">
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Fabrika Adı</label>
+                        <input type="text" class="cyber-input" name="name" id="factoryName" required>
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Adres</label>
+                        <input type="text" class="cyber-input" name="address" id="factoryAddress">
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Telefon</label>
+                        <input type="text" class="cyber-input" name="phone" id="factoryPhone">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="cyber-action-button" data-dismiss="modal">İptal</button>
+                <button type="button" class="cyber-btn" onclick="saveFactory()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Fabrika Düzenleme Modal -->
+<div class="modal fade" id="factoryEditModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content cyber-modal">
+            <div class="modal-header">
+                <h5 class="modal-title text-white" id="factoryEditModalTitle">Fabrika Düzenleme</h5>    
+                <button type="button" class="close text-white" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="factoryEditForm">
+                    <input type="hidden" name="id" id="factoryId">
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Fabrika Adı</label>
+                        <input type="text" class="cyber-input" name="name" required>
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Adres</label>
+                        <input type="text" class="cyber-input" name="address">
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Telefon</label>
+                        <input type="text" class="cyber-input" name="phone">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="cyber-action-button" data-dismiss="modal">İptal</button>
+                <button type="button" class="cyber-btn" onclick="saveFactory()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Yem Çeşidi Modal -->
+<div class="modal fade" id="feedTypeModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content cyber-modal">
+            <div class="modal-header">
+                <h5 class="modal-title text-white" id="feedTypeModalTitle">Yeni Yem Çeşidi</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="feedTypeForm">
+                    <input type="hidden" name="id" id="feedTypeId">
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Yem Adı</label>
+                        <input type="text" class="cyber-input" name="name" id="feedTypeName" required>
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Açıklama</label>
+                        <input type="text" class="cyber-input" name="description" id="feedTypeDescription">
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Birim</label>
+                        <select class="cyber-select" name="unit" id="feedTypeUnit">
+                            <option value="ADET">ADET</option>
+                            <option value="KG">KG</option>
+                        </select>
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Aktif mi?</label>
+                        <select class="cyber-select" name="is_active">
+                            <option value="true">Evet</option>
+                            <option value="false">Hayır</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="cyber-action-button" data-dismiss="modal">İptal</button>
+                <button type="button" class="cyber-btn" onclick="saveFeedType()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Yem Çeşidi Düzenleme Modal -->
+<div class="modal fade" id="feedTypeEditModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content cyber-modal">
+            <div class="modal-header">
+                <h5 class="modal-title text-white" id="feedTypeEditModalTitle">Yem Çeşidi Düzenleme</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="feedTypeEditForm">
+                    <input type="hidden" name="id" id="feedTypeId">
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Yem Adı</label>
+                        <input type="text" class="cyber-input" name="name" required>
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Birim</label>
+                        <select class="cyber-select" name="unit">
+                            <option value="ADET">ADET</option>
+                            <option value="KG">KG</option>
+                        </select>
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Aktif mi?</label>
+                        <select class="cyber-select" name="is_active">
+                            <option value="true">Evet</option>
+                            <option value="false">Hayır</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="cyber-action-button" data-dismiss="modal">İptal</button>
+                <button type="button" class="cyber-btn" onclick="saveFeedType()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+                    
+
+
+<!-- Kullanıcı Modal -->
+<div class="modal fade" id="userModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content cyber-modal">
+            <div class="modal-header">
+                <h5 class="modal-title text-white" id="userModalTitle">Yeni Kullanıcı</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="userForm">
+                    <input type="hidden" name="id" id="userId">
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Kullanıcı Adı</label>
+                        <input type="text" class="cyber-input" name="username" id="username" required>
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Email</label>
+                        <input type="email" class="cyber-input" name="email" id="email" required>
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Admin mi?</label>
+                        <input type="checkbox" name="is_superadmin" id="is_superadmin">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="cyber-action-button" data-dismiss="modal">İptal</button>
+                <button type="button" class="cyber-btn" onclick="saveUser()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Kullanıcı Düzenleme Modal -->
+<div class="modal fade" id="userEditModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content cyber-modal">
+            <div class="modal-header">
+                <h5 class="modal-title text-white" id="userEditModalTitle">Kullanıcı Düzenleme</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="userEditForm">
+                    <input type="hidden" name="id" id="userId">
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Kullanıcı Adı</label>
+                        <input type="text" class="cyber-input" name="username" required>
+                    </div>  
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Email</label>
+                        <input type="email" class="cyber-input" name="email" required>
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Rol</label>  
+                        <select class="cyber-select" name="role">
+                            <option value="admin">Admin</option>
+                            <option value="user">Kullanıcı</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="cyber-action-button" data-dismiss="modal">İptal</button>
+                <button type="button" class="cyber-btn" onclick="saveUser()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+                
+                
+
+
+
+
+<!-- Rapor Şablonu Modal -->
+<div class="modal fade" id="reportTemplateModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content cyber-modal">
+            <div class="modal-header">
+                <h5 class="modal-title text-white" id="reportTemplateModalTitle">Yeni Rapor Şablonu</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="reportTemplateForm">
+                    <input type="hidden" name="id" id="reportTemplateId">
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Rapor Adı</label>
+                        <input type="text" class="cyber-input" name="name" required>
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Açıklama</label>
+                        <textarea class="cyber-input" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Rapor Tipi</label>
+                        <select class="cyber-select" name="report_type">
+                            <option value="daily">Günlük</option>
+                            <option value="monthly">Aylık</option>
+                            <option value="yearly">Yıllık</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="cyber-action-button" data-dismiss="modal">İptal</button>
+                <button type="button" class="cyber-btn" onclick="saveReportTemplate()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Rapor Şablonu Düzenleme Modal -->
+<div class="modal fade" id="reportTemplateEditModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content cyber-modal">
+            <div class="modal-header">
+                <h5 class="modal-title text-white" id="reportTemplateEditModalTitle">Rapor Şablonu Düzenleme</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="reportTemplateEditForm">
+                    <input type="hidden" name="id" id="reportTemplateId">
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Rapor Adı</label>
+                        <input type="text" class="cyber-input" name="name" required>
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Açıklama</label>
+                        <textarea class="cyber-input" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Rapor Tipi</label>
+                        <select class="cyber-select" name="report_type">
+                            <option value="daily">Günlük</option>
+                            <option value="monthly">Aylık</option>
+                            <option value="yearly">Yıllık</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="cyber-action-button" data-dismiss="modal">İptal</button>
+                <button type="button" class="cyber-btn" onclick="saveReportTemplate()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<!-- YEM TEDARIÇILERI  Modal -->
+<div class="modal fade" id="feedSupplierModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content cyber-modal">
+            <div class="modal-header">
+                <h5 class="modal-title text-white" id="feedSupplierModalTitle">Yeni Yem Tedarikçisi</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="feedSupplierForm">
+                    <input type="hidden" name="id" id="feedSupplierId">
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Tedarikçi Adı</label>
+                        <input type="text" class="cyber-input" name="name" id="feedSupplierName" required>
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Adres</label>
+                        <input type="text" class="cyber-input" name="address" id="feedSupplierAddress">
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Telefon</label>
+                        <input type="text" class="cyber-input" name="phone" id="feedSupplierPhone">
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Aktif mi?</label>
+                        <select class="cyber-select" name="is_active">
+                            <option value="true">Evet</option>
+                            <option value="false">Hayır</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="cyber-action-button" data-dismiss="modal">İptal</button>
+                <button type="button" class="cyber-btn" onclick="saveFeedSupplier()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- YEM TEDARIÇILERI  Düzenleme Modal -->
+<div class="modal fade" id="feedSupplierEditModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content cyber-modal">
+            <div class="modal-header">
+                <h5 class="modal-title text-white" id="feedSupplierEditModalTitle">Yem Tedarikçisi Düzenleme</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="feedSupplierEditForm">
+                    <input type="hidden" name="id" id="feedSupplierId">
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Tedarikçi Adı</label>
+                        <input type="text" class="cyber-input" name="name" required>    
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Adres</label>
+                        <input type="text" class="cyber-input" name="address">
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Telefon</label>
+                        <input type="text" class="cyber-input" name="phone">
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Aktif mi?</label>
+                        <select class="cyber-select" name="is_active">
+                            <option value="true">Evet</option>
+                            <option value="false">Hayır</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="cyber-action-button" data-dismiss="modal">İptal</button>
+                <button type="button" class="cyber-btn" onclick="saveFeedSupplier()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- ARAÇ VE ŞÖFÖR Modal -->
+<div class="modal fade" id="vehicleModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content cyber-modal">
+            <div class="modal-header">
+                <h5 class="modal-title text-white" id="vehicleModalTitle">Yeni Araç</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="vehicleForm">
+                    <input type="hidden" name="id" id="vehicleId">
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Plaka</label>
+                        <input type="text" class="cyber-input" name="plate" id="vehiclePlate" required>
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Şoför Adı</label>
+                        <input type="text" class="cyber-input" name="driver_name" id="driverName">
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Aktif mi?</label>
+                        <select class="cyber-select" name="is_active">
+                            <option value="true">Evet</option>
+                            <option value="false">Hayır</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="cyber-action-button" data-dismiss="modal">İptal</button>
+                <button type="button" class="cyber-btn" onclick="saveVehicle()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ARAÇ VE ŞÖFÖR Düzenleme Modal -->
+<div class="modal fade" id="vehicleEditModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content cyber-modal">
+            <div class="modal-header">
+                <h5 class="modal-title text-white" id="vehicleEditModalTitle">Araç Düzenleme</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="vehicleEditForm">
+                    <input type="hidden" name="id" id="vehicleId">
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Plaka</label>
+                        <input type="text" class="cyber-input" name="plate" required>
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Şoför Adı</label>
+                        <input type="text" class="cyber-input" name="driver_name">
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Aktif mi?</label>
+                        <select class="cyber-select" name="is_active">
+                            <option value="true">Evet</option>
+                            <option value="false">Hayır</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="cyber-action-button" data-dismiss="modal">İptal</button>
+                <button type="button" class="cyber-btn" onclick="saveVehicle()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Müstahsil Tanımlamaları Modal -->
+<div class="modal fade" id="milkSupplierModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content cyber-modal">
+            <div class="modal-header">
+                <h5 class="modal-title text-white" id="milkSupplierModalTitle">Yeni Müstahsil</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="milkSupplierForm">
+                    <input type="hidden" name="id" id="milkSupplierId">
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Müstahsil Adı</label>
+                        <input type="text" class="cyber-input" name="name" id="milkSupplierName" required>
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">İlçe</label>
+                        <select class="cyber-select" name="district_id" id="milkSupplierDistrict" onchange="updateVillages(this.value)" required>
+                            <option value="">İlçe Seçin</option>
+                            {% for district in districts %}
+                            <option value="{{ district.id }}">{{ district.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Köy</label>
+                        <select class="cyber-select" name="village_id" id="milkSupplierVillage" required>
+                            <option value="">Önce İlçe Seçin</option>
+                        </select>
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Telefon</label>
+                        <input type="text" class="cyber-input" name="phone" id="milkSupplierPhone">
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Notlar</label>
+                        <textarea class="cyber-input" name="notes" id="milkSupplierNotes" rows="3"></textarea>
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Aktif mi?</label>
+                        <select class="cyber-select" name="is_active">
+                            <option value="true">Evet</option>
+                            <option value="false">Hayır</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="cyber-action-button" data-dismiss="modal">İptal</button>
+                <button type="button" class="cyber-btn" onclick="saveMilkSupplier()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Müstahsil Tanımlamaları Düzenleme Modal -->
+<div class="modal fade" id="milkSupplierEditModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content cyber-modal">
+            <div class="modal-header">
+                <h5 class="modal-title text-white" id="milkSupplierEditModalTitle">Müstahsil Düzenleme</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="milkSupplierEditForm">
+                    <input type="hidden" name="id" id="milkSupplierId">
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Müstahsil Adı</label>
+                        <input type="text" class="cyber-input" name="name" required>
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">İlçe</label>
+                        <select class="cyber-select" name="district_id" onchange="updateVillages(this.value)" required>
+                            <option value="">İlçe Seçin</option>
+                            {% for district in districts %}
+                            <option value="{{ district.id }}">{{ district.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Köy</label>
+                        <select class="cyber-select" name="village_id" required>
+                            <option value="">Önce İlçe Seçin</option>
+                        </select>
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Telefon</label>
+                        <input type="text" class="cyber-input" name="phone">
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Kredi Limiti</label>
+                        <input type="number" class="cyber-input" name="credit_limit" value="0">
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Notlar</label>
+                        <textarea class="cyber-input" name="notes" rows="3"></textarea>
+                    </div>
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Aktif mi?</label>
+                        <select class="cyber-select" name="is_active">
+                            <option value="true">Evet</option>
+                            <option value="false">Hayır</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="cyber-action-button" data-dismiss="modal">İptal</button>
+                <button type="button" class="cyber-btn" onclick="saveMilkSupplier()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block javascripts %}
+<script>
+function showTab(tabId) {
+    // Tüm tab içeriklerini gizle
+    document.querySelectorAll('.tab-content').forEach(content => {
+        content.style.display = 'none';
+    });
+    
+    // Tüm tab butonlarından active sınıfını kaldır
+    document.querySelectorAll('.cyber-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    // Seçili tab'ı göster
+    document.getElementById(tabId).style.display = 'block';
+    
+    // İlgili butonu aktif yap
+    document.querySelector(`button[onclick="showTab('${tabId}')"]`).classList.add('active');
+}
+
+// Sayfa yüklendiğinde URL'deki hash'e göre ilgili sekmeyi aç
+document.addEventListener('DOMContentLoaded', () => {
+    const hash = window.location.hash.substring(1); // # işaretini kaldır
+    if (hash && document.getElementById(hash)) {
+        showTab(hash);
+    } else {
+        showTab('factories'); // Varsayılan sekme
+    }
+});
+
+// Hash değiştiğinde ilgili sekmeyi aç
+window.addEventListener('hashchange', () => {
+    const hash = window.location.hash.substring(1);
+    if (hash && document.getElementById(hash)) {
+        showTab(hash);
+    }
+});
+
+function openModal(type, id = null) {
+    const modal = document.getElementById(`${type}Modal`);
+    const form = document.getElementById(`${type}Form`);
+    const title = document.getElementById(`${type}ModalTitle`);
+    
+    if (id) {
+        title.textContent = `${type.charAt(0).toUpperCase() + type.slice(1)} Düzenle`;
+        // Veriyi getir ve formu doldur
+        fetch(`/api/${type}s/${id}`)
+            .then(response => response.json())
+            .then(data => {
+                Object.keys(data).forEach(key => {
+                    const input = form.elements[key];
+                    if (input) input.value = data[key];
+                });
+            });
+    } else {
+        title.textContent = `Yeni ${type.charAt(0).toUpperCase() + type.slice(1)}`;
+        form.reset();
+    }
+    
+    $(modal).modal('show');
+}
+
+function saveFactory() {
+    const form = document.getElementById('factoryForm');
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+    const id = data.id;
+    
+    fetch(`/api/factories${id ? `/${id}` : ''}`, {
+        method: id ? 'PUT' : 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            $('#factoryModal').modal('hide');
+            cyberNotify.success(data.message || 'İşlem başarıyla tamamlandı');
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            cyberNotify.error(data.message || 'Bir hata oluştu');
+        }
+    })
+    .catch(error => {
+        console.error('Hata:', error);
+        cyberNotify.error('Bir hata oluştu: ' + error);
+    });
+}
+
+function deleteFactory(id) {
+    if (confirm('Bu fabrikayı pasife almak istediğinizden emin misiniz?')) {
+        fetch(`/api/factories/${id}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                cyberNotify.success(data.message || 'Fabrika başarıyla pasife alındı');
+                setTimeout(() => location.reload(), 1500);
+            } else {
+                cyberNotify.error(data.message || 'Bir hata oluştu');
+            }
+        })
+        .catch(error => {
+            console.error('Hata:', error);
+            cyberNotify.error('Bir hata oluştu: ' + error);
+        });
+    }
+}
+
+function saveFeedType() {
+    const form = document.getElementById('feedTypeForm');
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+    const id = data.id;
+    
+    fetch(`/api/feed-types${id ? `/${id}` : ''}`, {
+        method: id ? 'PUT' : 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            $('#feedTypeModal').modal('hide');
+            cyberNotify.success(data.message || 'İşlem başarıyla tamamlandı');
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            cyberNotify.error(data.message || 'Bir hata oluştu');
+        }
+    })
+    .catch(error => {
+        console.error('Hata:', error);
+        cyberNotify.error('Bir hata oluştu: ' + error);
+    });
+}
+
+function deleteFeedType(id) {
+    if (confirm('Bu yem çeşidini pasife almak istediğinizden emin misiniz?')) {
+        fetch(`/api/feed-types/${id}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                cyberNotify.success(data.message || 'Yem çeşidi başarıyla pasife alındı');
+                setTimeout(() => location.reload(), 1500);
+            } else {
+                cyberNotify.error(data.message || 'Bir hata oluştu');
+            }
+        })
+        .catch(error => {
+            console.error('Hata:', error);
+            cyberNotify.error('Bir hata oluştu: ' + error);
+        });
+    }
+}
+
+function saveFeedSupplier() {
+    const form = document.getElementById('feedSupplierForm');
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+    const id = data.id;
+    
+    fetch(`/api/feed-suppliers${id ? `/${id}` : ''}`, {
+        method: id ? 'PUT' : 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            $('#feedSupplierModal').modal('hide');
+            cyberNotify.success(data.message || 'İşlem başarıyla tamamlandı');
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            cyberNotify.error(data.message || 'Bir hata oluştu');
+        }
+    })
+    .catch(error => {
+        console.error('Hata:', error);
+        cyberNotify.error('Bir hata oluştu: ' + error);
+    });
+}
+
+function deleteFeedSupplier(id) {
+    if (confirm('Bu yem tedarikçisini pasife almak istediğinizden emin misiniz?')) {
+        fetch(`/api/feed-suppliers/${id}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                cyberNotify.success(data.message || 'Yem tedarikçisi başarıyla pasife alındı');
+                setTimeout(() => location.reload(), 1500);
+            } else {
+                cyberNotify.error(data.message || 'Bir hata oluştu');
+            }
+        })
+        .catch(error => {
+            console.error('Hata:', error);
+            cyberNotify.error('Bir hata oluştu: ' + error);
+        });
+    }
+}
+
+function saveVehicle() {
+    const form = document.getElementById('vehicleForm');
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+    const id = data.id;
+    
+    fetch(`/api/vehicles${id ? `/${id}` : ''}`, {
+        method: id ? 'PUT' : 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            $('#vehicleModal').modal('hide');
+            cyberNotify.success(data.message || 'İşlem başarıyla tamamlandı');
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            cyberNotify.error(data.message || 'Bir hata oluştu');
+        }
+    })
+    .catch(error => {
+        console.error('Hata:', error);
+        cyberNotify.error('Bir hata oluştu: ' + error);
+    });
+}
+
+function deleteVehicle(id) {
+    if (confirm('Bu aracı pasife almak istediğinizden emin misiniz?')) {
+        fetch(`/api/vehicles/${id}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                cyberNotify.success(data.message || 'Araç başarıyla pasife alındı');
+                setTimeout(() => location.reload(), 1500);
+            } else {
+                cyberNotify.error(data.message || 'Bir hata oluştu');
+            }
+        })
+        .catch(error => {
+            console.error('Hata:', error);
+            cyberNotify.error('Bir hata oluştu: ' + error);
+        });
+    }
+}
+
+function saveMilkSupplier() {
+    const form = document.getElementById('milkSupplierForm');
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+    const id = data.id;
+    
+    fetch(`/api/milk-suppliers${id ? `/${id}` : ''}`, {
+        method: id ? 'PUT' : 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            $('#milkSupplierModal').modal('hide');
+            cyberNotify.success(data.message || 'İşlem başarıyla tamamlandı');
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            cyberNotify.error(data.message || 'Bir hata oluştu');
+        }
+    })
+    .catch(error => {
+        console.error('Hata:', error);
+        cyberNotify.error('Bir hata oluştu: ' + error);
+    });
+}
+
+function deleteMilkSupplier(id) {
+    if (confirm('Bu müstahsili pasife almak istediğinizden emin misiniz?')) {
+        fetch(`/api/milk-suppliers/${id}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                cyberNotify.success(data.message || 'Müstahsil başarıyla pasife alındı');
+                setTimeout(() => location.reload(), 1500);
+            } else {
+                cyberNotify.error(data.message || 'Bir hata oluştu');
+            }
+        })
+        .catch(error => {
+            console.error('Hata:', error);
+            cyberNotify.error('Bir hata oluştu: ' + error);
+        });
+    }
+}
+
+function saveUser() {
+    const form = document.getElementById('userForm');
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+    const id = data.id;
+    
+    fetch(`/api/users${id ? `/${id}` : ''}`, {
+        method: id ? 'PUT' : 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            $('#userModal').modal('hide');
+            cyberNotify.success(data.message || 'İşlem başarıyla tamamlandı');
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            cyberNotify.error(data.message || 'Bir hata oluştu');
+        }
+    })
+    .catch(error => {
+        console.error('Hata:', error);
+        cyberNotify.error('Bir hata oluştu: ' + error);
+    });
+}
+
+function deleteUser(id) {
+    if (confirm('Bu kullanıcıyı silmek istediğinizden emin misiniz?')) {
+        fetch(`/api/users/${id}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                cyberNotify.success(data.message || 'Kullanıcı başarıyla silindi');
+                setTimeout(() => location.reload(), 1500);
+            } else {
+                cyberNotify.error(data.message || 'Bir hata oluştu');
+            }
+        })
+        .catch(error => {
+            console.error('Hata:', error);
+            cyberNotify.error('Bir hata oluştu: ' + error);
+        });
+    }
+}
+
+function saveReportTemplate() {
+    const form = document.getElementById('reportTemplateForm');
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+    const id = data.id;
+    
+    fetch(`/api/report-templates${id ? `/${id}` : ''}`, {
+        method: id ? 'PUT' : 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            $('#reportTemplateModal').modal('hide');
+            cyberNotify.success(data.message || 'İşlem başarıyla tamamlandı');
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            cyberNotify.error(data.message || 'Bir hata oluştu');
+        }
+    })
+    .catch(error => {
+        console.error('Hata:', error);
+        cyberNotify.error('Bir hata oluştu: ' + error);
+    });
+}
+
+function deleteReportTemplate(id) {
+    if (confirm('Bu rapor şablonunu silmek istediğinizden emin misiniz?')) {
+        fetch(`/api/report-templates/${id}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                cyberNotify.success(data.message || 'Rapor şablonu başarıyla silindi');
+                setTimeout(() => location.reload(), 1500);
+            } else {
+                cyberNotify.error(data.message || 'Bir hata oluştu');
+            }
+        })
+        .catch(error => {
+            console.error('Hata:', error);
+            cyberNotify.error('Bir hata oluştu: ' + error);
+        });
+    }
+}
+
+function loadVillages(districtId) {
+    return new Promise((resolve, reject) => {
+        if (!districtId) {
+            const villageSelect = document.querySelector('select[name="village_id"]');
+            villageSelect.innerHTML = '<option value="">Önce İlçe Seçin</option>';
+            resolve();
+            return;
+        }
+        
+        fetch(`/api/districts/${districtId}/villages`)
+            .then(response => response.json())
+            .then(data => {
+                const villageSelect = document.querySelector('select[name="village_id"]');
+                villageSelect.innerHTML = '<option value="">Köy Seçin</option>';
+                data.villages.forEach(village => {
+                    villageSelect.innerHTML += `<option value="${village.id}">${village.name}</option>`;
+                });
+                resolve();
+            })
+            .catch(error => {
+                console.error('Köy listesi yüklenirken hata:', error);
+                alert('Köy listesi yüklenirken bir hata oluştu.');
+                reject(error);
+            });
+    });
+}
+
+// Yem Çeşidi Düzenleme
+function editFeedType(id) {
+    fetch(`/api/feed-types/${id}`)
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('feedTypeId').value = data.id;
+            document.getElementById('feedTypeName').value = data.name;
+            document.getElementById('feedTypeDescription').value = data.description || '';
+            document.getElementById('feedTypeUnit').value = data.unit;
+            $('select[name="is_active"]').val(data.is_active.toString());
+            $('#feedTypeModal').modal('show');
+        } else {
+            alert('Yem çeşidi bilgileri alınamadı: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Hata:', error);
+        alert('Yem çeşidi bilgileri alınırken bir hata oluştu.');
+    });
+}
+
+// Yem Tedarikçisi Düzenleme
+function editFeedSupplier(id) {
+    fetch(`/api/feed-suppliers/${id}`)
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('feedSupplierId').value = data.id;
+            document.getElementById('feedSupplierName').value = data.name;
+            document.getElementById('feedSupplierAddress').value = data.address || '';
+            document.getElementById('feedSupplierPhone').value = data.phone || '';
+            $('select[name="is_active"]').val(data.is_active.toString());
+            $('#feedSupplierModal').modal('show');
+        } else {
+            alert('Tedarikçi bilgileri alınamadı: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Hata:', error);
+        alert('Tedarikçi bilgileri alınırken bir hata oluştu.');
+    });
+}
+
+// Araç Düzenleme
+function editVehicle(id) {
+    fetch(`/api/vehicles/${id}`)
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('vehicleId').value = data.id;
+            document.getElementById('vehiclePlate').value = data.plate;
+            document.getElementById('driverName').value = data.driver_name || '';
+            $('select[name="is_active"]').val(data.is_active.toString());
+            $('#vehicleModal').modal('show');
+        } else {
+            alert('Araç bilgileri alınamadı: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Hata:', error);
+        alert('Araç bilgileri alınırken bir hata oluştu.');
+    });
+}
+
+// Süt Tedarikçisi Düzenleme
+function editMilkSupplier(id) {
+    fetch(`/api/milk-suppliers/${id}`)
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('milkSupplierId').value = data.id;
+        document.getElementById('milkSupplierName').value = data.name;
+        document.getElementById('milkSupplierPhone').value = data.phone || '';
+        document.getElementById('milkSupplierDistrict').value = data.district_id || '';
+        updateVillages(data.district_id).then(() => {
+            document.getElementById('milkSupplierVillage').value = data.village_id || '';
+        });
+        document.getElementById('milkSupplierNotes').value = data.notes || '';
+        $('select[name="is_active"]').val(data.is_active.toString());
+        $('#milkSupplierModal').modal('show');
+    })
+    .catch(error => {
+        console.error('Hata:', error);
+        alert('Süt tedarikçisi bilgileri alınırken bir hata oluştu.');
+    });
+}
+
+// KULLANICI DÜZENLEME
+function editUser(id) {
+    fetch(`/api/users/${id}`)
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const user = data.user;
+            document.getElementById('userId').value = user.id;
+            document.getElementById('username').value = user.username;
+            document.getElementById('email').value = user.email;
+            document.getElementById('is_superadmin').checked = user.is_superadmin;
+            $('#userModal').modal('show');
+        } else {
+            alert('Kullanıcı bilgileri alınamadı: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Hata:', error);
+        alert('Kullanıcı bilgileri alınırken bir hata oluştu.');
+    });
+}
+
+// Modal kapatıldığında formları sıfırla
+$('.modal').on('hidden.bs.modal', function () {
+    $(this).find('form').trigger('reset');
+    $(this).find('input[type="hidden"]').val('');
+});
+
+// Modal kapatma butonlarını aktifleştir
+$(document).ready(function() {
+    $('.close').click(function() {
+        $(this).closest('.modal').modal('hide');
+    });
+    
+    $('.cyber-action-button[data-dismiss="modal"]').click(function() {
+        $(this).closest('.modal').modal('hide');
+    });
+});
+
+// Köy listesini güncelle
+function updateVillages(districtId) {
+    return new Promise((resolve, reject) => {
+        if (!districtId) {
+            const villageSelect = document.querySelector('select[name="village_id"]');
+            villageSelect.innerHTML = '<option value="">Önce İlçe Seçin</option>';
+            resolve();
+            return;
+        }
+        
+        fetch(`/api/districts/${districtId}/villages`)
+            .then(response => response.json())
+            .then(data => {
+                const villageSelect = document.querySelector('select[name="village_id"]');
+                villageSelect.innerHTML = '<option value="">Köy Seçin</option>';
+                data.villages.forEach(village => {
+                    villageSelect.innerHTML += `<option value="${village.id}">${village.name}</option>`;
+                });
+                resolve();
+            })
+            .catch(error => {
+                console.error('Köy listesi yüklenirken hata:', error);
+                alert('Köy listesi yüklenirken bir hata oluştu.');
+                reject(error);
+            });
+    });
+}
+
+function editFactory(id) {
+    fetch(`/api/factories/${id}`)
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('factoryId').value = data.id;
+            document.getElementById('factoryName').value = data.name;
+            document.getElementById('factoryAddress').value = data.address || '';
+            document.getElementById('factoryPhone').value = data.phone || '';
+            $('#factoryModal').modal('show');
+        } else {
+            alert('Fabrika bilgileri alınamadı: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Hata:', error);
+        alert('Fabrika bilgileri alınırken bir hata oluştu.');
+    });
+}
+</script>
+{% endblock javascripts %}

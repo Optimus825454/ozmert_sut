@@ -1,0 +1,205 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Kayıt Ol {% endblock title %}
+
+{% block stylesheets %}
+<style>
+  body {
+    font-family: "Tomorrow", sans-serif;
+    background-color: #0a0a0a;
+    color: #fff;
+  }
+
+  .register-container {
+    background: linear-gradient(rgba(10, 10, 10, 0.8), rgba(10, 10, 10, 0.9)), url('/static/assets/img/cyber-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .register-card {
+    background: rgba(47, 79, 79, 0.95); /* Slate Gray */
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--neon-border-color);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border-radius: 15px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 500px;
+    transition: none; /* Hareket olmaması için */
+  }
+
+  .register-card .card-header {
+    border-bottom: 1px solid var(--neon-border-color);
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .register-title {
+    color: var(--neon-text-color); /* Neon rengi */
+    font-size: 2rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+    text-align: center;
+    text-shadow: 0 0 10px rgba(8, 136, 255, 0.5); /* Gölge efekti */
+  }
+
+  .register-subtitle {
+    color: #fff;
+    font-size: 1.1rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-control {
+    background: rgba(10, 10, 10, 0.5);
+    border: 1px solid var(--neon-border-color);
+    color: #fff;
+    padding: 0.75rem 1rem;
+    font-size: 1.1rem;
+    border-radius: 5px;
+  }
+
+  .form-control:focus {
+    background: rgba(10, 10, 10, 0.7);
+    border-color: var(--neon-border-color);
+    box-shadow: 0 0 0 3px rgba(54, 153, 255, 0.15);
+  }
+
+  .btn-register {
+    background: var(--neon-border-color);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 12px rgba(54, 153, 255, 0.2);
+    transition: all 0.3s ease;
+    border-radius: 5px;
+    display: flex; /* Yazıyı ortalamak için */
+    justify-content: center; /* Yazıyı ortalamak için */
+    align-items: center; /* Yazıyı ortalamak için */
+  }
+
+  .btn-register:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(54, 153, 255, 0.3);
+  }
+
+  .form-check-input:checked {
+    background-color: var(--neon-border-color);
+    border-color: var(--neon-border-color);
+  }
+
+  .login-link {
+    color: var(--neon-border-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .login-link:hover {
+    color: #2d88e6;
+    text-decoration: none;
+  }
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="register-container">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-xl-4 col-lg-5 col-md-7">
+        <div class="card register-card">
+          <div class="card-header text-center pb-0">
+            <h4 class="register-title">ÖZMERT SÜT</h4>
+            <p class="register-subtitle mb-0">
+              {% if msg %}
+                <span class="text-danger">{{ msg | safe }}</span>
+              {% else %}
+                Yeni bir hesap oluşturun
+              {% endif %}
+            </p>
+          </div>
+          <div class="card-body px-4 py-4">
+            <form role="form" method="post" action="">
+              {{ form.hidden_tag() }}
+              
+              <div class="mb-3">
+                {{ form.username(placeholder="Kullanıcı Adı", class="form-control") }}
+              </div>
+              
+              <div class="mb-3">
+                {{ form.email(placeholder="Email", class="form-control") }}
+              </div>
+              
+              <div class="mb-3">
+                {{ form.password(placeholder="Şifre", class="form-control", type="password") }}
+              </div>
+              
+              <div class="form-check form-switch mb-3">
+                <input class="form-check-input" type="checkbox" id="rememberMe">
+                <label class="form-check-label text-muted" for="rememberMe">Kullanım koşullarını kabul ediyorum</label>
+              </div>
+              
+              <div class="text-center">
+                <button type="submit" name="register" class="btn btn-register w-100">
+                  Kayıt Ol
+                </button>
+              </div>
+            </form>
+          </div>
+          <div class="card-footer text-center py-3">
+            <p class="mb-0">
+          
+              <a href="{{ url_for('authentication_blueprint.login') }}" class="login-link">
+                Giriş Yap
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block javascripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Form validasyonu
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+        const username = document.getElementById('username');
+        const email = document.getElementById('email');
+        const password = document.getElementById('password');
+        
+        if (!username.value.trim() || !email.value.trim() || !password.value.trim()) {
+            e.preventDefault();
+            if (!username.value.trim()) {
+                username.classList.add('is-invalid');
+            }
+            if (!email.value.trim()) {
+                email.classList.add('is-invalid');
+            }
+            if (!password.value.trim()) {
+                password.classList.add('is-invalid');
+            }
+        }
+    });
+
+    // Input alanlarından is-invalid sınıfını kaldır
+    const inputs = document.querySelectorAll('.form-control');
+    inputs.forEach(input => {
+        input.addEventListener('input', function() {
+            if (this.value.trim()) {
+                this.classList.remove('is-invalid');
+            }
+        });
+    });
+});
+</script>
+{% endblock javascripts %}

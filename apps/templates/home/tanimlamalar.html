@@ -1,0 +1,144 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Genel Tanımlamalar {% endblock title %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="text-neon-cyan mb-4 glitch">Sistem Tanımlamaları</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Tedarikçi Tanımlamaları -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title text-neon-cyan">
+                        <i class="fas fa-truck me-2"></i>Yem Tedarikçisi Tanımlama
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Yem tedarikçilerini sisteme kaydedin ve yönetin.</p>
+                    <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#yemTedarikciModal">
+                        <i class="fas fa-plus me-2"></i>Yeni Tedarikçi Ekle
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Araç Tanımlamaları -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title text-neon-cyan">
+                        <i class="fas fa-car me-2"></i>Araç Tanımlama
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Süt toplama ve nakliye araçlarını sisteme kaydedin.</p>
+                    <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#aracTanimlariModal">
+                        <i class="fas fa-plus me-2"></i>Yeni Araç Ekle
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Süt Fabrikası Tanımlamaları -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title text-neon-cyan">
+                        <i class="fas fa-industry me-2"></i>Süt Fabrikası Tanımlama
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Süt işleme tesislerini ve fabrikalarını tanımlayın.</p>
+                    <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#sutFabrikaTanimlariModal">
+                        <i class="fas fa-plus me-2"></i>Yeni Fabrika Ekle
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Müstahsil Tanımlamaları -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title text-neon-cyan">
+                        <i class="fas fa-user-farmer me-2"></i>Müstahsil Tanımlama
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Süt üreticilerini ve müstahsilleri sisteme ekleyin.</p>
+                    <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#mustahsilTanimlariModal">
+                        <i class="fas fa-plus me-2"></i>Yeni Müstahsil Ekle
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hesap Kesim Periyodu Tanımlamaları -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title text-neon-cyan">
+                        <i class="fas fa-calendar-alt me-2"></i>Hesap Kesim Periyodu
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Muhasebe ve finansal raporlama dönemlerini tanımlayın.</p>
+                    <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#hesapKesimPeryoduModal">
+                        <i class="fas fa-plus me-2"></i>Yeni Periyot Ekle
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kullanıcı Tanımlamaları -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title text-neon-cyan">
+                        <i class="fas fa-users me-2"></i>Kullanıcı Tanımlama
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Sisteme yeni kullanıcılar ekleyin ve yönetin.</p>
+                    <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#kullaniciTanimlariModal">
+                        <i class="fas fa-plus me-2"></i>Yeni Kullanıcı Ekle
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modallar -->
+{% include 'home/tanimlamalar_modals.html' %}
+
+{% endblock content %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+{% endblock stylesheets %}
+
+{% block javascripts %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{{ url_for('static', filename='js/tanimlamalar.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Glitch efekti için rastgele animasyon
+    const glitchElements = document.querySelectorAll('.glitch');
+    glitchElements.forEach(el => {
+        el.addEventListener('mouseover', function() {
+            this.style.animation = 'glitch 0.5s linear infinite';
+        });
+        el.addEventListener('mouseout', function() {
+            this.style.animation = 'none';
+        });
+    });
+});
+</script>
+{% endblock javascripts %}

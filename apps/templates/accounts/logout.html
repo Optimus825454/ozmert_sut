@@ -1,0 +1,11 @@
+
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Çıkış Yap</h1>
+    <p>Çıkış yapmak istediğinize emin misiniz?</p>
+    <form method="post">
+        {% csrf_token %}
+        <input type="submit" value="Çıkış Yap">
+    </form>
+    <a href="{% url 'accounts:login' %}">Vazgeç</a>
+{% endblock %}  

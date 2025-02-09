@@ -1,0 +1,8 @@
+/.cursorignore
+/.cursorrules
+/.env
+/.ruff_cache
+/cyber
+/database
+/env
+/index.html

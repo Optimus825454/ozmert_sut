@@ -1,0 +1,230 @@
+/* Navbar ve içerik düzenlemeleri */
+body {
+    padding-top: 70px; /* Navbar'ın yüksekliği kadar padding */
+    background-color: #5792ce;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+
+}
+
+.navbar {
+    background-color: #1a1f37;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,.16);
+    height: 70px;
+    padding: 0.5rem 1rem;
+}
+
+.navbar-brand {
+    color: #fff !important;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.nav-link {
+    color: rgba(255,255,255,.8) !important;
+    font-size: 1.1rem; /* Adjusted font size for better visibility */
+    padding: 0.5rem 1rem !important;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #fff !important;
+    background: rgba(255,255,255,.1);
+    border-radius: 5px;
+}
+
+.nav-link.active {
+    color: #fff !important;
+    background: rgba(255,255,255,.2);
+    border-radius: 5px;
+}
+
+.dropdown-menu {
+    background-color: #1a1f37;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,.15);
+    padding: 0.5rem;
+}
+
+.dropdown-item {
+    color: rgba(255,255,255,.8);
+    padding: 0.5rem 1.1rem;
+    border-radius: 5px;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(255,255,255,.1);
+    color: #fff;
+}
+
+.dropdown-item.active {
+    background-color: rgba(255,255,255,.2);
+    color: #fff;
+}
+
+/* Ana içerik alanı düzenlemeleri */
+.main-content {
+    min-height: calc(100vh - 100px); /* navbar ve footer yüksekliğini çıkar */
+    padding-right: 10px;
+    padding-left: 10px;
+
+}
+
+/* Kart düzenlemeleri */
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.05);
+    margin-bottom: 2rem;
+    background-color: #2e198cd3;
+}
+
+.card-header {
+    background-color: transparent;
+    border-bottom: 1px solid rgba(0,0,0,.05);
+    padding: 1.5rem;
+}
+
+.card-header h6 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+    color: #344767;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Tablo düzenlemeleri */
+.table {
+    margin-bottom: 0;
+}
+
+.table thead th {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 1rem;
+    border-bottom: 1px solid rgba(0,0,0,.05);
+}
+
+.table tbody td {
+    padding: 1rem;
+    vertical-align: middle;
+    border-bottom: 1px solid rgba(0,0,0,.05);
+}
+
+/* Buton düzenlemeleri */
+.btn-primary {
+    background-color: #5e72e4;
+    border-color: #5e72e4;
+    box-shadow: 0 3px 6px rgba(94,114,228,.3);
+}
+
+.btn-primary:hover {
+    background-color: #324cdd;
+    border-color: #324cdd;
+}
+
+.btn-secondary {
+    background-color: #8392ab;
+    border-color: #8392ab;
+    box-shadow: 0 3px 6px rgba(131,146,171,.3);
+}
+
+.btn-secondary:hover {
+    background-color: #6c7c95;
+    border-color: #6c7c95;
+}
+
+/* Modal düzenlemeleri */
+.modal-content {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.2);
+}
+
+.modal-header {
+    border-bottom: 1px solid rgba(0,0,0,.05);
+    padding: 1.5rem;
+}
+
+.modal-header .modal-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.modal-footer {
+    border-top: 1px solid rgba(0,0,0,.05);
+    padding: 1.5rem;
+}
+
+/* Form elemanları */
+.form-control {
+    border: 1px solid rgba(0,0,0,.1);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+}
+
+.form-control:focus {
+    border-color: #5e72e4;
+    box-shadow: 0 0 0 2px rgba(94,114,228,.25);
+}
+
+.form-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #344767;
+    margin-bottom: 0.5rem;
+}
+
+.btn-primary:hover {
+    background-color: #324cdd;
+    border-color: #324cdd;
+}
+
+.btn-secondary:hover {
+    background-color: #6c7c95;
+    border-color: #6c7c95;
+}
+
+
+
+
+/* Footer düzenlemeleri */
+.footer {
+
+    padding: 1rem 0;
+    background-color: #1a1f37;
+    border-top: 1px solid rgba(0,0,0,.05);
+}
+
+/* Responsive düzenlemeler */
+@media (max-width: 991.98px) {
+    .navbar-collapse {
+        background-color: #1a1f37;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        right: 0;
+        padding: 1rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,.15);
+    }
+    
+    .navbar-nav .nav-item {
+        padding: 0.25rem 0;
+    }
+    
+    .dropdown-menu {
+        background-color: rgba(0,0,0,.2);
+        margin: 0.5rem 0;
+    }
+}

@@ -1,0 +1,73 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Hesap Hareketleri {% endblock %}
+
+{% block content %}
+
+<div class="min-height-300 bg-primary position-absolute w-100"></div>
+
+
+
+<main class="main-content position-relative border-radius-lg">
+
+  
+  <div class="container-fluid py-4">
+    <div class="row">
+      <div class="col-12">
+        <div class="card mb-4">
+          <div class="card-header pb-0">
+            <div class="d-flex justify-content-between">
+              <div>
+                <h6 class="mb-0">{{ supplier.name }} - Hesap Hareketleri</h6>
+                <p class="text-sm">
+                  Kategori: <span class="badge badge-sm bg-gradient-{{ supplier.category_color }}">{{ supplier.category.value }}</span>
+                  Bakiye: <span class="{{ 'text-danger' if supplier.account.balance < 0 else 'text-success' }}">
+                    {{ "{:,.2f}".format(supplier.account.balance) }} TL
+                  </span>
+                </p>
+              </div>
+              <a href="/supplier-accounts" class="btn btn-primary">Geri Dön</a>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table align-items-center">
+                <thead>
+                  <tr>
+                    <th>Tarih</th>
+                    <th>İşlem</th>
+                    <th>Açıklama</th>
+                    <th>Tutar</th>
+                    <th>Bakiye</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for transaction in transactions %}
+                  <tr>
+                    <td>{{ transaction.date.strftime('%d.%m.%Y %H:%M') }}</td>
+                    <td>
+                      <span class="badge badge-sm bg-{{ 'success' if transaction.transaction_type == 'CREDIT' else 'warning' }}">
+                        {{ 'Alacak' if transaction.transaction_type == 'CREDIT' else 'Borç' }}
+                      </span>
+                    </td>
+                    <td>{{ transaction.description }}</td>
+                    <td>{{ "{:,.2f}".format(transaction.amount) }} TL</td>
+                    <td class="{{ 'text-danger' if transaction.running_balance < 0 else 'text-success' }}">
+                      {{ "{:,.2f}".format(transaction.running_balance) }} TL
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% include "includes/footer.html" %}
+
+  </div>
+</main>
+
+{% endblock %}

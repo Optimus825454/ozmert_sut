@@ -1,0 +1,43 @@
+<div class="container position-sticky z-index-sticky top-0">
+    <div class="row">
+      <div class="col-12">
+        <!-- Auth Navigation -->
+        <nav class="navbar navbar-expand-lg fixed-top">
+          <div class="container">
+            <!-- Logo -->
+            <a class="navbar-brand" href="/">
+              <span class="font-weight-bold">ÖZMERT SÜT</span>
+            </a>
+
+            <!-- Mobil menü butonu -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarAuth">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Navbar içeriği -->
+            <div class="collapse navbar-collapse" id="navbarAuth">
+              <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                  <a class="nav-link {% if 'login' in segment %} active {% endif %}" href="/login">
+                    <i class="fas fa-sign-in-alt me-2"></i>Giriş
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link {% if 'register' in segment %} active {% endif %}" href="/register">
+                    <i class="fas fa-user-plus me-2"></i>Kayıt
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/password-reset">
+                    <i class="fas fa-key me-2"></i>Şifre Sıfırlama
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+        <!-- End Navbar -->
+      </div>
+    </div>
+  </div>
+  

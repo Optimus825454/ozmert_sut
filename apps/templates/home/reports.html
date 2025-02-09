@@ -1,0 +1,432 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Raporlar {% endblock %}
+
+{% block stylesheets %}
+<!-- ApexCharts -->
+<link href="/static/assets/css/apexcharts.css" rel="stylesheet">
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="min-height-300 bg-primary position-absolute w-100"></div>
+
+
+
+<main class="main-content position-relative border-radius-lg">
+
+
+
+  <div class="container-fluid py-4">
+    
+    <!-- Rapor Oluşturma Kartı -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card mb-4">
+          <div class="card-header pb-0">
+            <h6>Yeni Rapor Oluştur</h6>
+          </div>
+          <div class="card-body">
+            <form id="reportForm">
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Rapor Şablonu</label>
+                    <select class="form-control" name="template_id" required>
+                      <option value="">Seçiniz...</option>
+                      {% for template in templates %}
+                      <option value="{{ template.id }}">{{ template.name }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Başlangıç Tarihi</label>
+                    <input type="date" class="form-control" name="start_date" required>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Bitiş Tarihi</label>
+                    <input type="date" class="form-control" name="end_date" required>
+                  </div>
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-12">
+                  <button type="submit" class="btn btn-primary">Rapor Oluştur</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kaydedilmiş Raporlar -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card mb-4">
+          <div class="card-header pb-0">
+            <h6>Kaydedilmiş Raporlar</h6>
+          </div>
+          <div class="card-body px-0 pt-0 pb-2">
+            <div class="table-responsive p-0">
+              <table class="table align-items-center mb-0">
+                <thead>
+                  <tr>
+                    <th>Rapor Adı</th>
+                    <th>Oluşturma Tarihi</th>
+                    <th>Rapor Tipi</th>
+                    <th>İşlemler</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for report in saved_reports %}
+                  <tr>
+                    <td>{{ report.name }}</td>
+                    <td>{{ report.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+                    <td>{{ report.template.report_type }}</td>
+                    <td>
+                      <button class="btn btn-sm btn-info" onclick="viewReport({{ report.id }})">
+                        Görüntüle
+                      </button>
+                      <button class="btn btn-sm btn-primary" onclick="downloadReport({{ report.id }})">
+                        İndir
+                      </button>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grafik Kartları -->
+    <div class="row mt-4">
+      <!-- Süt Teslimatları Grafiği -->
+      <div class="col-lg-6">
+        <div class="card mb-4">
+          <div class="card-header pb-0">
+            <h6>Süt Teslimatları</h6>
+          </div>
+          <div class="card-body">
+            <div id="milkDeliveryChart"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Finansal Özet Grafiği -->
+      <div class="col-lg-6">
+        <div class="card mb-4">
+          <div class="card-header pb-0">
+            <h6>Finansal Özet</h6>
+          </div>
+          <div class="card-body">
+            <div id="financialChart"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  {% include "includes/footer.html" %}
+
+</main>
+
+<!-- Rapor Görüntüleme Modal -->
+<div class="modal fade" id="reportModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Rapor Detayı</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="reportContent">
+        <!-- Rapor içeriği buraya yüklenecek -->
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+
+{% block javascripts %}
+<!-- ApexCharts -->
+<script src="/static/assets/js/apexcharts.min.js"></script>
+
+<script>
+// Rapor oluşturma
+document.getElementById('reportForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const data = {
+        template_id: formData.get('template_id'),
+        parameters: {
+            start_date: formData.get('start_date'),
+            end_date: formData.get('end_date')
+        }
+    };
+
+    fetch('/api/generate-report', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Rapor başarıyla oluşturuldu');
+            location.reload();
+        } else {
+            alert('Hata: ' + data.message);
+        }
+    })
+    .catch(error => {
+        alert('Bir hata oluştu: ' + error);
+    });
+});
+
+// Rapor görüntüleme
+function viewReport(reportId) {
+    fetch(`/api/reports/${reportId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('reportContent').innerHTML = formatReportData(data.report);
+                new bootstrap.Modal(document.getElementById('reportModal')).show();
+            } else {
+                alert('Hata: ' + data.message);
+            }
+        })
+        .catch(error => {
+            alert('Bir hata oluştu: ' + error);
+        });
+}
+
+// Rapor indirme
+function downloadReport(reportId) {
+    window.location.href = `/api/reports/${reportId}/download`;
+}
+
+// Rapor verilerini formatlama
+function formatReportData(report) {
+    let html = '<div class="container">';
+    
+    // Başlık
+    html += `<h4 class="mb-4">${report.name}</h4>`;
+    
+    // Özet bilgiler
+    if (report.summary) {
+        html += '<div class="row mb-4">';
+        for (const [key, value] of Object.entries(report.summary)) {
+            html += `
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-title">${formatKey(key)}</h6>
+                            <p class="card-text">${formatValue(value)}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        html += '</div>';
+    }
+    
+    // Detay tabloları
+    if (report.milk_deliveries) {
+        html += '<h5 class="mb-3">Süt Teslimatları</h5>';
+        html += generateTable(report.milk_deliveries);
+    }
+    
+    if (report.feed_deliveries) {
+        html += '<h5 class="mb-3">Yem Teslimatları</h5>';
+        html += generateTable(report.feed_deliveries);
+    }
+    
+    if (report.transactions) {
+        html += '<h5 class="mb-3">Hesap Hareketleri</h5>';
+        html += generateTable(report.transactions);
+    }
+    
+    html += '</div>';
+    return html;
+}
+
+// Tablo oluşturma yardımcı fonksiyonu
+function generateTable(data) {
+    if (!data || data.length === 0) return '<p>Veri bulunamadı</p>';
+    
+    let html = '<div class="table-responsive"><table class="table">';
+    
+    // Başlıklar
+    html += '<thead><tr>';
+    for (const key of Object.keys(data[0])) {
+        html += `<th>${formatKey(key)}</th>`;
+    }
+    html += '</tr></thead>';
+    
+    // Veriler
+    html += '<tbody>';
+    for (const row of data) {
+        html += '<tr>';
+        for (const value of Object.values(row)) {
+            html += `<td>${formatValue(value)}</td>`;
+        }
+        html += '</tr>';
+    }
+    html += '</tbody></table></div>';
+    
+    return html;
+}
+
+// Anahtar formatla
+function formatKey(key) {
+    return key.split('_')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+}
+
+// Değer formatla
+function formatValue(value) {
+    if (typeof value === 'number') {
+        return value.toLocaleString('tr-TR', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+    return value;
+}
+
+// Grafikleri yükle
+document.addEventListener('DOMContentLoaded', function() {
+    loadMilkDeliveryChart();
+    loadFinancialChart();
+});
+
+// Süt teslimatları grafiği
+function loadMilkDeliveryChart() {
+    fetch('/api/analytics/milk-deliveries')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const options = {
+                    chart: {
+                        type: 'area',
+                        height: 350,
+                        toolbar: {
+                            show: false
+                        }
+                    },
+                    series: [{
+                        name: 'Süt Miktarı (Lt)',
+                        data: data.data.map(d => d.quantity)
+                    }],
+                    xaxis: {
+                        categories: data.data.map(d => d.date),
+                        type: 'datetime'
+                    },
+                    yaxis: {
+                        title: {
+                            text: 'Miktar (Lt)'
+                        }
+                    },
+                    colors: ['#0075ff'],
+                    stroke: {
+                        curve: 'smooth'
+                    },
+                    fill: {
+                        type: 'gradient',
+                        gradient: {
+                            shadeIntensity: 1,
+                            opacityFrom: 0.7,
+                            opacityTo: 0.3
+                        }
+                    }
+                };
+
+                const chart = new ApexCharts(document.getElementById('milkDeliveryChart'), options);
+                chart.render();
+            }
+        });
+}
+
+// Finansal özet grafiği
+function loadFinancialChart() {
+    fetch('/api/analytics/financial')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const options = {
+                    chart: {
+                        type: 'bar',
+                        height: 350,
+                        stacked: true,
+                        toolbar: {
+                            show: false
+                        }
+                    },
+                    series: [{
+                        name: 'Gelir',
+                        data: data.data.map(d => d.milk_income)
+                    }, {
+                        name: 'Yem Gideri',
+                        data: data.data.map(d => -d.feed_expense)
+                    }, {
+                        name: 'Diğer Giderler',
+                        data: data.data.map(d => -d.other_expense)
+                    }],
+                    xaxis: {
+                        categories: data.data.map(d => d.date),
+                        type: 'datetime'
+                    },
+                    yaxis: {
+                        title: {
+                            text: 'TL'
+                        }
+                    },
+                    colors: ['#2dce89', '#fb6340', '#f5365c'],
+                    plotOptions: {
+                        bar: {
+                            horizontal: false,
+                            columnWidth: '55%',
+                            endingShape: 'rounded'
+                        }
+                    },
+                    dataLabels: {
+                        enabled: false
+                    },
+                    stroke: {
+                        show: true,
+                        width: 2,
+                        colors: ['transparent']
+                    },
+                    fill: {
+                        opacity: 1
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function(value) {
+                                return value.toLocaleString('tr-TR', {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                }) + ' TL';
+                            }
+                        }
+                    }
+                };
+
+                const chart = new ApexCharts(document.getElementById('financialChart'), options);
+                chart.render();
+            }
+        });
+}
+</script>
+{% endblock javascripts %} 

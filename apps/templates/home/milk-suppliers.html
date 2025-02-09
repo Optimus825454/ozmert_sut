@@ -1,0 +1,227 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Süt Tedarikçileri {% endblock title %}
+
+{% block stylesheets %}
+<style>
+.cyber-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.cyber-card {
+    background: linear-gradient(145deg, rgba(28, 45, 86, 0.95), rgba(41, 66, 122, 0.85));
+    border: 1px solid rgba(8, 136, 255, 0.3);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0 30px rgba(8, 136, 255, 0.2);
+}
+
+.cyber-title {
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(8, 136, 255, 0.5);
+}
+
+.cyber-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.cyber-supplier-card {
+    background: rgba(20, 30, 60, 0.7);
+    border: 1px solid rgba(8, 136, 255, 0.3);
+    border-radius: 15px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.cyber-supplier-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 30px rgba(8, 136, 255, 0.3);
+    border-color: rgba(8, 136, 255, 0.5);
+}
+
+.cyber-supplier-name {
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px rgba(8, 136, 255, 0.5);
+}
+
+.cyber-supplier-info {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.cyber-supplier-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(8, 136, 255, 0.2);
+}
+
+.cyber-stat {
+    text-align: center;
+}
+
+.cyber-stat-value {
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-shadow: 0 0 10px rgba(8, 136, 255, 0.5);
+}
+
+.cyber-stat-label {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.cyber-button {
+    background: linear-gradient(145deg, #1e3c72, #2a5298);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.cyber-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(8, 136, 255, 0.4);
+}
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="cyber-container py-4">
+    <div class="cyber-card">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="cyber-title mb-0">Süt Tedarikçileri</h2>
+            <button class="cyber-button" onclick="openNewSupplierModal()">
+                Yeni Tedarikçi
+            </button>
+        </div>
+        
+        <div class="cyber-grid">
+            {% for supplier in suppliers %}
+            <div class="cyber-supplier-card">
+                <h3 class="cyber-supplier-name">{{ supplier.name }}</h3>
+                <div class="cyber-supplier-info">
+                    <i class="ni ni-pin-3"></i> {{ supplier.address }}
+                </div>
+                <div class="cyber-supplier-info">
+                    <i class="ni ni-mobile-button"></i> {{ supplier.phone }}
+                </div>
+                <div class="cyber-supplier-stats">
+                    <div class="cyber-stat">
+                        <div class="cyber-stat-value">{{ "{:,.0f}".format(supplier.credit_limit) }} TL</div>
+                        <div class="cyber-stat-label">Kredi Limiti</div>
+                    </div>
+                    <div class="cyber-stat">
+                        <div class="cyber-stat-value">{{ "{:,.0f}".format(supplier.feed_credit_limit) }} TL</div>
+                        <div class="cyber-stat-label">Yem Limiti</div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Yeni Tedarikçi Modal -->
+<div class="modal fade" id="newSupplierModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content bg-dark">
+            <div class="modal-header border-0">
+                <h5 class="modal-title text-white">Yeni Tedarikçi Ekle</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="newSupplierForm">
+                    <div class="form-group">
+                        <label class="text-white">Tedarikçi Adı</label>
+                        <input type="text" class="form-control" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="text-white">Adres</label>
+                        <input type="text" class="form-control" name="address">
+                    </div>
+                    <div class="form-group">
+                        <label class="text-white">Telefon</label>
+                        <input type="text" class="form-control" name="phone">
+                    </div>
+                    <div class="form-group">
+                        <label class="text-white">Kredi Limiti</label>
+                        <input type="number" class="form-control" name="credit_limit" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="text-white">Yem Kredi Limiti</label>
+                        <input type="number" class="form-control" name="feed_credit_limit" value="0">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">İptal</button>
+                <button type="button" class="btn btn-primary" onclick="saveNewSupplier()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block javascripts %}
+<script>
+function openNewSupplierModal() {
+    $('#newSupplierModal').modal('show');
+}
+
+function saveNewSupplier() {
+    const form = document.getElementById('newSupplierForm');
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+    
+    fetch('/api/suppliers', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('Hata: ' + data.message);
+        }
+    })
+    .catch(error => {
+        alert('Bir hata oluştu: ' + error);
+    });
+}
+</script>
+{% endblock javascripts %} 

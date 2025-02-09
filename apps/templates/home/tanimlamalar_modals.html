@@ -1,0 +1,120 @@
+<!-- Yem Tedarikçisi Modal -->
+<div class="modal fade" id="yemTedarikciModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-neon-cyan">Yem Tedarikçisi Tanımlama</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="yemTedarikciForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Tedarikçi Adı *</label>
+                        <input type="text" name="ad" class="form-control" placeholder="Tedarikçi adını girin" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">İletişim Bilgileri</label>
+                        <input type="text" name="iletisim" class="form-control" placeholder="Telefon veya e-posta">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Adres</label>
+                        <textarea name="adres" class="form-control" rows="3" placeholder="Tedarikçi adresi"></textarea>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="aktif_mi" id="aktifTedarikci" checked>
+                        <label class="form-check-label" for="aktifTedarikci">
+                            Aktif mi?
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Araç Tanımları Modal -->
+<div class="modal fade" id="aracTanimlariModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-neon-cyan">Araç Tanımlama</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="aracForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Araç Plakası *</label>
+                        <input type="text" name="plaka" class="form-control" placeholder="Araç plakasını girin" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Araç Tipi *</label>
+                        <select name="arac_tipi" class="form-control" required>
+                            <option value="">Araç Tipi Seçin</option>
+                            <option value="sut_toplama">Süt Toplama Aracı</option>
+                            <option value="nakliye">Nakliye Aracı</option>
+                            <option value="sogutma_tanki">Soğutma Tankı</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Kapasite (Litre)</label>
+                        <input type="number" name="kapasite" class="form-control" placeholder="Araç kapasitesi">
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="aktif_mi" id="aktifArac" checked>
+                        <label class="form-check-label" for="aktifArac">
+                            Aktif mi?
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Süt Fabrikası Modal -->
+<div class="modal fade" id="sutFabrikaTanimlariModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-neon-cyan">Süt Fabrikası Tanımlama</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="sutFabrikasiForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Fabrika Adı *</label>
+                        <input type="text" name="ad" class="form-control" placeholder="Fabrika adını girin" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Lokasyon</label>
+                        <input type="text" name="lokasyon" class="form-control" placeholder="Fabrika konumu">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Günlük İşleme Kapasitesi (Litre)</label>
+                        <input type="number" name="gunluk_kapasite" class="form-control" placeholder="Günlük kapasite">
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="aktif_mi" id="aktifFabrika" checked>
+                        <label class="form-check-label" for="aktifFabrika">
+                            Aktif mi?
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Diğer modallar benzer şekilde eklenecek -->

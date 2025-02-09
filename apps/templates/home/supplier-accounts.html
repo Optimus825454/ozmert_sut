@@ -1,0 +1,169 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Müstahsil Hesapları {% endblock %}
+
+{% block content %}
+
+<div class="min-height-300 bg-primary position-absolute w-100"></div>
+
+
+
+<main class="main-content position-relative border-radius-lg">
+
+ 
+
+  <div class="container-fluid py-4">
+    <div class="row">
+      <div class="col-12">
+        <div class="card mb-4">
+          <div class="card-header pb-0">
+            <h6 class="mb-0">Müstahsil Hesap Durumu</h6>
+            <div class="btn-group float-end" role="group">
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cashTransactionModal">
+                Nakit İşlem
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table align-items-center">
+                <thead>
+                  <tr>
+                    <th>Müstahsil</th>
+                    <th>Kategori</th>
+                    <th>Nakit Limit</th>
+                    <th>Yem Limit</th>
+                    <th>Güncel Bakiye</th>
+                    <th>Limit Kullanımı</th>
+                    <th>İşlemler</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for supplier in suppliers %}
+                  <tr>
+                    <td>{{ supplier.name }}</td>
+                    <td>
+                      <span class="badge badge-sm bg-gradient-{{ supplier.category_color }}">
+                        {{ supplier.category.value }}
+                      </span>
+                    </td>
+                    <td>{{ "{:,.2f}".format(supplier.credit_limit) }} TL</td>
+                    <td>{{ "{:,.2f}".format(supplier.feed_credit_limit) }} TL</td>
+                    <td class="{{ 'text-danger' if supplier.account.balance < 0 else 'text-success' }}">
+                      {{ "{:,.2f}".format(supplier.account.balance) }} TL
+                    </td>
+                    <td>
+                      {% set usage_percent = (supplier.credit_limit - supplier.account.balance) / supplier.credit_limit * 100 %}
+                      <div class="progress">
+                        <div class="progress-bar bg-{{ 'danger' if usage_percent > 80 else 'info' }}" 
+                             role="progressbar" style="width: {{ usage_percent }}%">
+                          {{ "%.1f"|format(usage_percent) }}%
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <button class="btn btn-sm btn-info" onclick="showTransactions({{ supplier.id }})">
+                        Hesap Hareketleri
+                      </button>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% include "includes/footer.html" %}
+
+  </div>
+
+  <!-- Nakit İşlem Modal -->
+  <div class="modal fade" id="cashTransactionModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Nakit İşlem</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="cashTransactionForm">
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Müstahsil</label>
+              <select class="form-control" name="supplier_id" required>
+                <option value="">Seçiniz...</option>
+                {% for supplier in suppliers %}
+                <option value="{{ supplier.id }}">{{ supplier.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group mt-3">
+              <label>İşlem Tipi</label>
+              <select class="form-control" name="transaction_type" required>
+                <option value="DEBIT">Borç (Ödeme Yapılacak)</option>
+                <option value="CREDIT">Alacak (Tahsilat)</option>
+              </select>
+            </div>
+            <div class="form-group mt-3">
+              <label>Tutar (TL)</label>
+              <input type="number" step="0.01" class="form-control" name="amount" required>
+            </div>
+            <div class="form-group mt-3">
+              <label>Açıklama</label>
+              <textarea class="form-control" name="description" rows="2"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+            <button type="submit" class="btn btn-primary">Kaydet</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+document.getElementById('cashTransactionForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const data = {};
+    
+    formData.forEach(function(value, key) {
+        data[key] = value;
+    });
+
+    fetch('/api/cash-transaction', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(function(response) {
+        return response.json();
+    })
+    .then(function(result) {
+        if (result.success) {
+            alert('İşlem başarıyla kaydedildi');
+            location.reload();
+        } else {
+            alert('Hata: ' + result.message);
+        }
+    })
+    .catch(function(error) {
+        alert('Bir hata oluştu: ' + error);
+    });
+});
+
+function showTransactions(supplierId) {
+    window.location.href = '/supplier-transactions/' + supplierId;
+}
+</script>
+{% endblock %}

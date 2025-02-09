@@ -1,0 +1,93 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Kredi Limitleri {% endblock %}
+
+{% block content %}
+
+<div class="min-height-300 bg-primary position-absolute w-100"></div>
+
+
+
+<main class="main-content position-relative border-radius-lg">
+
+
+
+  <div class="container-fluid py-4">
+    <div class="row">
+      <div class="col-12">
+        <div class="card mb-4">
+          <div class="card-header pb-0">
+            <h6>Müstahsil Kategorileri ve Limit Yönetimi</h6>
+          </div>
+          <div class="card-body">
+            <form id="creditLimitsForm">
+              {% for category in categories %}
+              <div class="row border-bottom py-3">
+                <div class="col-md-3">
+                  <h6 class="text-uppercase">{{ category.name }}</h6>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label>Nakit Limit (TL)</label>
+                    <input type="number" class="form-control" name="cash_limit_{{ category.value }}" 
+                           value="{{ limits[category.value].cash_limit|default(0) }}" required>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label>Yem Limiti (TL)</label>
+                    <input type="number" class="form-control" name="feed_limit_{{ category.value }}"
+                           value="{{ limits[category.value].feed_limit|default(0) }}" required>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label>Uyarı Eşiği (%)</label>
+                    <input type="number" class="form-control" name="warning_{{ category.value }}"
+                           value="{{ limits[category.value].warning_threshold|default(80) }}" required>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+              <button type="submit" class="btn btn-primary mt-4">Limitleri Güncelle</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% include "includes/footer.html" %}
+
+  </div>
+</main>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+document.getElementById('creditLimitsForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const data = Object.fromEntries(formData);
+
+    fetch('/api/credit-limits', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Kredi limitleri başarıyla güncellendi');
+        } else {
+            alert('Hata: ' + data.message);
+        }
+    })
+    .catch(error => {
+        alert('Bir hata oluştu: ' + error);
+    });
+});
+</script>
+{% endblock %}

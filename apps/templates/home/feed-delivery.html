@@ -1,0 +1,154 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Yem Dağıtım {% endblock %}
+
+{% block content %}
+
+<div class="min-height-300 bg-primary position-absolute w-100"></div>
+
+
+
+<main class="main-content position-relative border-radius-lg">
+
+
+
+  <div class="container-fluid py-4">
+    <div class="row">
+      <div class="col-12">
+        <div class="card mb-4">
+          <div class="card-header pb-0">
+            <h6>Yem Dağıtım</h6>
+            <button class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#deliveryModal">
+              Yeni Dağıtım
+            </button>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table align-items-center">
+                <thead>
+                  <tr>
+                    <th>Tarih</th>
+                    <th>Plaka</th>
+                    <th>Yem Türü</th>
+                    <th>Müstahsil</th>
+                    <th>Miktar</th>
+                    <th>Birim Fiyat</th>
+                    <th>Toplam Tutar</th>
+                    <th>Ödeme Tipi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for delivery in deliveries %}
+                  <tr>
+                    <td>{{ delivery.delivery_date.strftime('%d.%m.%Y %H:%M') }}</td>
+                    <td>{{ delivery.vehicle_stock.vehicle_plate }}</td>
+                    <td>{{ delivery.vehicle_stock.feed_type }}</td>
+                    <td>{{ delivery.milk_supplier.name }}</td>
+                    <td>{{ delivery.quantity }} kg</td>
+                    <td>{{ "%.2f"|format(delivery.unit_price) }} TL</td>
+                    <td>{{ "%.2f"|format(delivery.total_amount) }} TL</td>
+                    <td>
+                      <span class="badge badge-sm bg-{{ 'success' if delivery.payment_type == 'CASH' else 'warning' }}">
+                        {{ 'Nakit' if delivery.payment_type == 'CASH' else 'Kredili' }}
+                      </span>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% include "includes/footer.html" %}
+
+  </div>
+
+  <!-- Delivery Modal -->
+  <div class="modal fade" id="deliveryModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Yem Dağıtım Formu</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="deliveryForm">
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Araç Stoğu</label>
+              <select class="form-control" name="vehicle_stock_id" required>
+                <option value="">Seçiniz...</option>
+                {% for stock in stocks %}
+                <option value="{{ stock.id }}">{{ stock.vehicle_plate }} - {{ stock.feed_type }} ({{ stock.quantity }}kg)</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group mt-3">
+              <label>Müstahsil</label>
+              <select class="form-control" name="milk_supplier_id" required>
+                <option value="">Seçiniz...</option>
+                {% for supplier in suppliers %}
+                <option value="{{ supplier.id }}">{{ supplier.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group mt-3">
+              <label>Miktar (kg)</label>
+              <input type="number" step="0.01" class="form-control" name="quantity" required>
+            </div>
+            <div class="form-group mt-3">
+              <label>Birim Fiyat (TL/kg)</label>
+              <input type="number" step="0.01" class="form-control" name="unit_price" required>
+            </div>
+            <div class="form-group mt-3">
+              <label>Ödeme Tipi</label>
+              <select class="form-control" name="payment_type" required>
+                <option value="CASH">Nakit</option>
+                <option value="CREDIT">Kredili</option>
+              </select>
+            </div>
+            <div class="form-group mt-3">
+              <label>Notlar</label>
+              <textarea class="form-control" name="notes" rows="3"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+            <button type="submit" class="btn btn-primary">Kaydet</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+document.getElementById('deliveryForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+
+    fetch('/feed-delivery', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Yem dağıtımı başarıyla kaydedildi');
+            location.reload();
+        } else {
+            alert('Hata: ' + data.message);
+        }
+    })
+    .catch(error => {
+        alert('Bir hata oluştu: ' + error);
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,145 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Süt Toplama {% endblock title %}
+
+{% block stylesheets %}
+<style>
+.cyber-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.cyber-card {
+    background: linear-gradient(145deg, rgba(28, 45, 86, 0.95), rgba(41, 66, 122, 0.85));
+    border: 1px solid rgba(8, 136, 255, 0.3);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0 30px rgba(8, 136, 255, 0.2);
+}
+
+.cyber-title {
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(8, 136, 255, 0.5);
+}
+
+.cyber-form-group {
+    margin-bottom: 1.5rem;
+}
+
+.cyber-label {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+}
+
+.cyber-input {
+    background: rgba(20, 30, 60, 0.7);
+    border: 1px solid rgba(8, 136, 255, 0.3);
+    border-radius: 8px;
+    color: #fff;
+    padding: 0.75rem 1rem;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.cyber-input:focus {
+    outline: none;
+    border-color: rgba(8, 136, 255, 0.6);
+    box-shadow: 0 0 15px rgba(8, 136, 255, 0.3);
+}
+
+.cyber-button {
+    background: linear-gradient(145deg, #1e3c72, #2a5298);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.cyber-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(8, 136, 255, 0.4);
+}
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="cyber-container py-4">
+    <div class="cyber-card">
+        <h2 class="cyber-title">Süt Toplama</h2>
+        
+        <form method="post">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Tedarikçi</label>
+                        <select class="cyber-input" name="supplier_id" required>
+                            <option value="">Tedarikçi Seçin</option>
+                            <!-- Tedarikçiler buraya gelecek -->
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Miktar (Lt)</label>
+                        <input type="number" class="cyber-input" name="quantity" step="0.01" required>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Yağ Oranı (%)</label>
+                        <input type="number" class="cyber-input" name="fat_ratio" step="0.01">
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">pH Değeri</label>
+                        <input type="number" class="cyber-input" name="ph_value" step="0.01">
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Araç Plakası</label>
+                        <input type="text" class="cyber-input" name="vehicle_plate">
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="cyber-form-group">
+                        <label class="cyber-label">Sürücü Adı</label>
+                        <input type="text" class="cyber-input" name="driver_name">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-end mt-4">
+                <button type="submit" class="cyber-button">Kaydet</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}
+
+{% block javascripts %}
+<script>
+// JavaScript kodları buraya gelecek
+</script>
+{% endblock javascripts %}

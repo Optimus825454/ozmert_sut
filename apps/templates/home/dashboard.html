@@ -1,0 +1,338 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Dashboard {% endblock %}
+
+{% block stylesheets %}
+<!-- ApexCharts -->
+<link href="https://cdn.jsdelivr.net/npm/apexcharts@3.41.0/dist/apexcharts.css" rel="stylesheet">
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="min-height-300 bg-primary position-absolute w-100"></div>
+
+
+
+<main class="main-content position-relative border-radius-lg" style="padding-top: 40px;" >
+
+
+
+  <div class="container-fluid py-4">
+    
+    <!-- Özet Kartları -->
+    <div class="row">
+      <div class="col-xl-3 col-sm-6 mb-4">
+        <div class="card">
+          <div class="card-body p-3">
+            <div class="row">
+              <div class="col-8">
+                <div class="numbers">
+                  <p class="text-sm mb-0 text-uppercase font-weight-bold">Günlük Süt</p>
+                  <h5 class="font-weight-bolder">{{ "{:,.0f}".format(daily_milk) }} Lt</h5>
+                  <p class="mb-0 text-sm">
+                    <span class="text-success text-sm font-weight-bolder">+{{ milk_change }}%</span>
+                    <span class="text-muted">dün</span>
+                  </p>
+                </div>
+              </div>
+              <div class="col-4 text-end">
+                <div class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
+                  <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-3 col-sm-6 mb-4">
+        <div class="card">
+          <div class="card-body p-3">
+            <div class="row">
+              <div class="col-8">
+                <div class="numbers">
+                  <p class="text-sm mb-0 text-uppercase font-weight-bold">Aktif Müstahsil</p>
+                  <h5 class="font-weight-bolder">{{ supplier_count }}</h5>
+                  <p class="mb-0 text-sm">
+                    <span class="text-success text-sm font-weight-bolder">+{{ supplier_change }}%</span>
+                    <span class="text-muted">bu ay</span>
+                  </p>
+                </div>
+              </div>
+              <div class="col-4 text-end">
+                <div class="icon icon-shape bg-gradient-success shadow-success text-center rounded-circle">
+                  <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-3 col-sm-6 mb-4">
+        <div class="card">
+          <div class="card-body p-3">
+            <div class="row">
+              <div class="col-8">
+                <div class="numbers">
+                  <p class="text-sm mb-0 text-uppercase font-weight-bold">Yem Stoku</p>
+                  <h5 class="font-weight-bolder">{{ "{:,.0f}".format(total_feed_stock) }} Kg</h5>
+                  <p class="mb-0 text-sm">
+                    <span class="text-{{ 'success' if feed_stock_status == 'Normal' else 'danger' }} text-sm font-weight-bolder">{{ feed_stock_status }}</span>
+                  </p>
+                </div>
+              </div>
+              <div class="col-4 text-end">
+                <div class="icon icon-shape bg-gradient-warning shadow-warning text-center rounded-circle">
+                  <i class="ni ni-cart text-lg opacity-10" aria-hidden="true"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-3 col-sm-6 mb-4">
+        <div class="card">
+          <div class="card-body p-3">
+            <div class="row">
+              <div class="col-8">
+                <div class="numbers">
+                  <p class="text-sm mb-0 text-uppercase font-weight-bold">Aylık Kar</p>
+                  <h5 class="font-weight-bolder">{{ "{:,.0f}".format(monthly_profit) }} TL</h5>
+                  <p class="mb-0 text-sm">
+                    <span class="text-{{ 'success' if profit_change > 0 else 'danger' }} text-sm font-weight-bolder">{{ profit_change }}%</span>
+                    <span class="text-muted">geçen ay</span>
+                  </p>
+                </div>
+              </div>
+              <div class="col-4 text-end">
+                <div class="icon icon-shape bg-gradient-danger shadow-danger text-center rounded-circle">
+                  <i class="ni ni-world text-lg opacity-10" aria-hidden="true"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grafikler -->
+    <div class="row mt-4">
+      <div class="col-lg-7 mb-4">
+        <div class="card">
+          <div class="card-header pb-0">
+            <h6>Süt Alım Trendi</h6>
+          </div>
+          <div class="card-body p-3">
+            <div id="milkTrendChart"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-5 mb-4">
+        <div class="card">
+          <div class="card-header pb-0">
+            <h6>Müstahsil Kategorileri</h6>
+          </div>
+          <div class="card-body p-3">
+            <div id="supplierCategoryChart"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alt Grafikler -->
+    <div class="row mt-4">
+      <div class="col-lg-4 mb-4">
+        <div class="card">
+          <div class="card-header pb-0">
+            <h6>Yem Dağıtım</h6>
+          </div>
+          <div class="card-body p-3">
+            <div id="feedDistributionChart"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 mb-4">
+        <div class="card">
+          <div class="card-header pb-0">
+            <h6>Kalite Parametreleri</h6>
+          </div>
+          <div class="card-body p-3">
+            <div id="qualityParamsChart"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 mb-4">
+        <div class="card">
+          <div class="card-header pb-0">
+            <h6>Gelir/Gider Dağılımı</h6>
+          </div>
+          <div class="card-body p-3">
+            <div id="financialDistributionChart"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tablolar -->
+    <div class="row mt-4">
+      <div class="col-lg-8 mb-4">
+        <div class="card">
+          <div class="card-header pb-0">
+            <div class="d-flex justify-content-between">
+              <h6>Son İşlemler</h6>
+              <button class="btn btn-link text-secondary mb-0">
+                <i class="fa fa-ellipsis-v text-xs"></i>
+              </button>
+            </div>
+          </div>
+          <div class="card-body px-0 pt-0 pb-2">
+            <div class="table-responsive p-0">
+              <table class="table align-items-center mb-0">
+                <thead>
+                  <tr>
+                    <th>Tarih</th>
+                    <th>İşlem</th>
+                    <th>Müstahsil</th>
+                    <th>Miktar</th>
+                    <th>Durum</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for transaction in recent_transactions %}
+                  <tr>
+                    <td>{{ transaction.date.strftime('%d.%m.%Y %H:%M') }}</td>
+                    <td>{{ transaction.type }}</td>
+                    <td>{{ transaction.supplier }}</td>
+                    <td>{{ "{:,.2f}".format(transaction.amount) }} {{ transaction.unit }}</td>
+                    <td>
+                      <span class="badge badge-sm bg-gradient-{{ transaction.status_color }}">
+                        {{ transaction.status }}
+                      </span>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 mb-4">
+        <div class="card">
+          <div class="card-header pb-0">
+            <h6>Kritik Stok Durumu</h6>
+          </div>
+          <div class="card-body p-3">
+            <div class="timeline timeline-one-side">
+              {% for stock in critical_stocks %}
+              <div class="timeline-block mb-3">
+                <span class="timeline-step">
+                  <i class="ni ni-bell-55 text-{{ stock.status_color }}"></i>
+                </span>
+                <div class="timeline-content">
+                  <h6 class="text-dark text-sm font-weight-bold mb-0">{{ stock.feed_type }}</h6>
+                  <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">
+                    {{ stock.quantity }} Kg - {{ stock.vehicle_plate }}
+                  </p>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  {% include "includes/footer.html" %}
+
+</main>
+
+{% endblock content %}
+
+{% block javascripts %}
+<!-- ApexCharts -->
+<script src="https://cdn.jsdelivr.net/npm/apexcharts@3.41.0/dist/apexcharts.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Süt Alım Trendi Grafiği
+    const milkTrendOptions = {
+        chart: { type: 'area', height: 350, toolbar: { show: false } },
+        series: [{
+            name: 'Süt Miktarı',
+            data: JSON.parse('{{ milk_trend_data | tojson | safe }}')
+        }],
+        xaxis: {
+            categories: JSON.parse('{{ milk_trend_labels | tojson | safe }}'),
+            type: 'datetime'
+        },
+        yaxis: { title: { text: 'Litre' } },
+        colors: ['#0075ff'],
+        stroke: { curve: 'smooth' },
+        fill: {
+            type: 'gradient',
+            gradient: { shadeIntensity: 1, opacityFrom: 0.7, opacityTo: 0.3 }
+        }
+    };
+    new ApexCharts(document.getElementById('milkTrendChart'), milkTrendOptions).render();
+
+    // Müstahsil Kategorileri Grafiği
+    const supplierCategoryOptions = {
+        chart: { type: 'donut', height: 350 },
+        series: JSON.parse('{{ supplier_category_data | tojson | safe }}'),
+        labels: JSON.parse('{{ supplier_category_labels | tojson | safe }}'),
+        colors: ['#fb6340', '#f5365c', '#11cdef', '#2dce89'],
+        legend: { position: 'bottom' }
+    };
+    new ApexCharts(document.getElementById('supplierCategoryChart'), supplierCategoryOptions).render();
+
+    // Yem Dağıtım Grafiği
+    const feedDistributionOptions = {
+        chart: { type: 'bar', height: 350, stacked: true, toolbar: { show: false } },
+        series: [{
+            name: 'Nakit',
+            data: JSON.parse('{{ feed_cash_data | tojson | safe }}')
+        }, {
+            name: 'Kredili',
+            data: JSON.parse('{{ feed_credit_data | tojson | safe }}')
+        }],
+        xaxis: { categories: JSON.parse('{{ feed_distribution_labels | tojson | safe }}') },
+        colors: ['#2dce89', '#fb6340'],
+        plotOptions: {
+            bar: { horizontal: false, columnWidth: '55%', endingShape: 'rounded' }
+        }
+    };
+    new ApexCharts(document.getElementById('feedDistributionChart'), feedDistributionOptions).render();
+
+    // Kalite Parametreleri Grafiği
+    const qualityParamsOptions = {
+        chart: { type: 'line', height: 350, toolbar: { show: false } },
+        series: [{
+            name: 'Yağ Oranı',
+            data: JSON.parse('{{ fat_ratio_data | tojson | safe }}')
+        }, {
+            name: 'pH Değeri',
+            data: JSON.parse('{{ ph_value_data | tojson | safe }}')
+        }],
+        xaxis: {
+            categories: JSON.parse('{{ quality_params_labels | tojson | safe }}'),
+            type: 'datetime'
+        },
+        colors: ['#11cdef', '#fb6340'],
+        stroke: { curve: 'smooth' }
+    };
+    new ApexCharts(document.getElementById('qualityParamsChart'), qualityParamsOptions).render();
+
+    // Gelir/Gider Dağılımı Grafiği
+    const financialDistributionOptions = {
+        chart: { type: 'pie', height: 350 },
+        series: JSON.parse('{{ financial_distribution_data | tojson | safe }}'),
+        labels: JSON.parse('{{ financial_distribution_labels | tojson | safe }}'),
+        colors: ['#2dce89', '#fb6340', '#f5365c'],
+        legend: { position: 'bottom' }
+    };
+    new ApexCharts(document.getElementById('financialDistributionChart'), financialDistributionOptions).render();
+});
+</script>
+{% endblock javascripts %}

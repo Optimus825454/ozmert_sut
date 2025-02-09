@@ -1,0 +1,190 @@
+{% extends "layouts/base-fullscreen.html" %}
+
+{% block title %} Giriş {% endblock %}
+
+{% block stylesheets %}
+<style>
+    .cyber-auth-wrapper {
+        min-height: 100vh;
+        background: linear-gradient(145deg, #1a2035 0%, #1e2842 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+    }
+
+    .cyber-auth-card {
+        background: linear-gradient(145deg, rgba(28, 45, 86, 0.95), rgba(41, 66, 122, 0.85));
+        border: 1px solid rgba(8, 136, 255, 0.3);
+        border-radius: 15px;
+        padding: 2rem;
+        width: 100%;
+        max-width: 400px;
+        box-shadow: 0 0 30px rgba(8, 136, 255, 0.2);
+    }
+
+    .cyber-icon {
+        font-size: 3rem;
+        color: #0088ff;
+        margin-bottom: 1.5rem;
+        text-shadow: 0 0 10px rgba(8, 136, 255, 0.5);
+    }
+
+    .cyber-title {
+        color: #fff;
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        text-shadow: 0 0 10px rgba(8, 136, 255, 0.5);
+    }
+
+    .cyber-input {
+        background: rgba(20, 30, 60, 0.7);
+        border: 1px solid rgba(8, 136, 255, 0.3);
+        border-radius: 8px;
+        color: #fff;
+        padding: 0.75rem 1rem;
+        width: 100%;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .cyber-input:focus {
+        outline: none;
+        border-color: rgba(8, 136, 255, 0.6);
+        box-shadow: 0 0 15px rgba(8, 136, 255, 0.3);
+    }
+
+    .cyber-checkbox {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .cyber-checkbox input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        margin-right: 0.5rem;
+        accent-color: #0088ff;
+    }
+
+    .cyber-checkbox label {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.9rem;
+        cursor: pointer;
+    }
+
+    .cyber-button {
+        background: linear-gradient(145deg, #1e3c72, #2a5298);
+        border: none;
+        border-radius: 8px;
+        color: #fff;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        width: 100%;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .cyber-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 20px rgba(8, 136, 255, 0.4);
+    }
+
+    .cyber-link {
+        color: #0088ff;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .cyber-link:hover {
+        color: #fff;
+        text-shadow: 0 0 10px rgba(8, 136, 255, 0.5);
+    }
+
+    .cyber-message {
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 1.5rem;
+        font-size: 0.9rem;
+    }
+
+    .cyber-error {
+        color: #ff3e3e;
+        text-shadow: 0 0 10px rgba(255, 62, 62, 0.5);
+    }
+</style>
+{% endblock stylesheets %}
+
+{% block content %}   
+<div class="cyber-auth-wrapper">
+    <div class="cyber-auth-card">
+        <div class="text-center">
+            <i class="feather icon-unlock cyber-icon"></i>
+            <h3 class="cyber-title">Giriş</h3>
+
+            <div class="cyber-message">
+                {% if msg %}
+                    <span class="cyber-error">{{ msg | safe }}</span>
+                {% else %}
+                    Giriş bilgilerinizi giriniz
+                {% endif %} 
+            </div>
+
+            <form role="form" method="post" action="" id="loginForm">
+                {{ form.hidden_tag() }}                    
+
+                {{ form.username(placeholder="Kullanıcı Adı", class="cyber-input", autocomplete="username") }}
+                
+                {{ form.password(placeholder="Şifre", class="cyber-input", type="password", autocomplete="current-password") }}
+                
+                <div class="cyber-checkbox">
+                    <input type="checkbox" name="remember" id="remember" checked>
+                    <label for="remember">Beni Hatırla</label>
+                </div>
+
+                <button type="submit" name="login" class="cyber-button">
+                    Giriş
+                </button>
+
+                <p class="cyber-message">
+                    Hesabınız yok mu? 
+                    <a href="{{ url_for('authentication_blueprint.register') }}" class="cyber-link">Kayıt Ol</a>
+                </p>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block javascripts %}
+{{ super() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('loginForm');
+    const inputs = form.querySelectorAll('.cyber-input');
+
+    inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.classList.add('focused');
+        });
+
+        input.addEventListener('blur', function() {
+            if (!this.value) {
+                this.parentElement.classList.remove('focused');
+            }
+        });
+    });
+});
+</script>
+{% endblock javascripts %}
+
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tomorrow:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
